@@ -1,0 +1,59 @@
+#' Converts a DateTime to a simTime. truncates the Date part. range 0-(24*60*60-1)
+#'
+#' @param datetime
+#'
+#' @return t A simDateTime
+as.simTime <- function(datetime) {
+  60*60*as.integer(strftime(datetime, "%H")) +
+    60*as.integer(strftime(datetime, "%M")) +
+    as.integer(strftime(datetime, "%S"))
+}
+
+
+#' Converts a DateTime to a simDate. truncates the Time part. range 0-364
+#'
+#' @param datetime
+#'
+#' @return t A simDate
+as.simDate <- function(datetime) {
+  as.integer(strftime(datetime, "%j")) - 1
+}
+
+
+#' Converts a DateTime to a simDateTime
+#'
+#' @param datetime
+#'
+#' @return t A simDateTime
+as.simDateTime <- function(datetime) {
+  as.simDate(datetime)*24*60*60 + as.simTime(datetime)
+}
+
+
+#' Date part of a simDateTime
+#'
+#' @param t A simDateTime
+#'
+#' @return the day of year (0-364)
+simDate <- function(t) {
+  trunc(t/(24*60*60))
+}
+
+#' Time part of a simDateTime
+#'
+#' @param t A simDateTime
+#'
+#' @return the actual time in seconds (0-(24*60*60-1))
+simTime <- function(t) {
+  t %% (24*60*60)
+}
+
+
+#' Weekday of a simDateTime
+#'
+#' @param t A simDateTime
+#'
+#' @return the weekday in the format: "Mo, Di, Mi, Do, Fr, Sa, So"
+simWeekday <- function(t) {
+  rep(c("Mi", "Do", "Fr", "Sa", "So", "Mo", "Di"), length = 365)[simDate(t)+1]
+}
