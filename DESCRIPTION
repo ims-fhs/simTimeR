@@ -9,3 +9,4 @@ Description: simTimeR provides functions to coerce DateTimes to integer numbers 
 License: GPL (>= 2) just like R itself.
 LazyData: TRUE
 Suggests: testthat
+URL: http://github.com/symbolrush/simTimeR
