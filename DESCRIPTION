@@ -1,6 +1,6 @@
 Package: simTimeR
 Type: Package
-Title: Package to handle DateTimes as integer for the smooth handling insiede simulations
+Title: Package to handle DateTimes as integers (called simDateTimes) for the smooth handling insiede simulations
 Version: 0.1
 Date: 2015-09-01
 Author: Adrian Schmid
