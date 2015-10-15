@@ -11,6 +11,13 @@ test_that("simDate() delivers the right date", {
 })
 
 
+test_that("as.charTime() works", {
+  expect_equal(as.charTime(26400), "07:20")
+  expect_equal(as.charTime(68700), "19:05")
+})
+
+
+
 test_that("as.simTime() works", {
   expect_equal(as.simTime("2014-01-01 00:00:00 CET"), 0)
   expect_equal(as.simTime("2014-01-02 00:00:00 CET"), 0)

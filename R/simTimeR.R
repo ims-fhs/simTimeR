@@ -31,6 +31,18 @@ as.simDateTime <- function(datetime) {
   as.simDate(datetime)*24*60*60 + as.simTime(datetime)
 }
 
+#' as.charTime
+#'
+#' @param simTime
+#'
+#' @return charTime A char containing a time in the format H:MM
+as.charTime <- function(simTime) {
+  h <- trunc(simTime/60/60)
+  if(h < 10) {h <- as.character(paste0(0,h))}
+  m <- simTime %% (60*60)/60
+  if(m < 10) {m <- as.character(paste0(0,m))}
+  paste0(h,":",m)
+}
 
 #' Date part of a simDateTime
 #'
