@@ -4,6 +4,7 @@
 #'
 #' @return t A simDateTime
 as.simTime <- function(datetime) {
+  datetime <- as.character(datetime)
   60*60*as.integer(strftime(datetime, "%H")) +
     60*as.integer(strftime(datetime, "%M")) +
     as.integer(strftime(datetime, "%S"))
@@ -16,6 +17,7 @@ as.simTime <- function(datetime) {
 #'
 #' @return t A simDate
 as.simDate <- function(datetime) {
+  datetime <- as.character(datetime)
   as.integer(strftime(datetime, "%j")) - 1
 }
 
