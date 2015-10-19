@@ -35,7 +35,7 @@ as.simDateTime <- function(datetime) {
 #'
 #' @param simTime
 #'
-#' @return charTime A char containing a time in the format H:MM
+#' @return charTime A char containing a time in the format HH:MM
 as.charTime <- function(simTime) {
   h <- trunc(simTime/60/60)
   if(h < 10) {h <- as.character(paste0(0,h))}
@@ -69,5 +69,5 @@ simTime <- function(t) {
 #'
 #' @return the weekday in the format: "Mo, Di, Mi, Do, Fr, Sa, So"
 simWeekday <- function(t) {
-  rep(c("Mi", "Do", "Fr", "Sa", "So", "Mo", "Di"), length = 365)[simDate(t)+1]
+  rep(c("Mi", "Do", "Fr", "Sa", "So", "Mo", "Di"), length = 365)[simDate(t) + 1]
 }

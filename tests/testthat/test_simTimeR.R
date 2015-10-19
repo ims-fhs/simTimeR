@@ -10,6 +10,12 @@ test_that("simDate() delivers the right date", {
   expect_equal(simDate(365*24*60*60 - 1), 364)
 })
 
+test_that("simWeekday() works", {
+  expect_equal(simWeekday(as.simDateTime("2014-01-01 00:00:00 CET")), "Mi")
+  expect_equal(simWeekday(as.simDateTime("2014-01-02 00:00:00 CET")), "Do")
+  expect_equal(simWeekday(as.simDateTime("2014-12-31 23:59:59 CET")), "Mi")
+})
+
 
 test_that("as.charTime() works", {
   expect_equal(as.charTime(26400), "07:20")
@@ -37,8 +43,3 @@ test_that("as.simDateTime() works", {
   expect_equal(as.simDateTime("2014-12-31 23:59:59 CET"), 365*24*60*60-1)
 })
 
-test_that("simWeekday() works", {
-  expect_equal(simWeekday(as.simDateTime("2014-01-01 00:00:00 CET")), "Mi")
-  expect_equal(simWeekday(as.simDateTime("2014-01-02 00:00:00 CET")), "Do")
-  expect_equal(simWeekday(as.simDateTime("2014-12-31 23:59:59 CET")), "Mi")
-})
