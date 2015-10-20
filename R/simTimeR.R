@@ -31,7 +31,8 @@ as.simDateTime <- function(datetime) {
   as.simDate(datetime)*24*60*60 + as.simTime(datetime)
 }
 
-#' as.charTime
+#' as.charTime(): Converts a simTime back to a char containing the time in the
+#' format HH:MM
 #'
 #' @param simTime
 #'
