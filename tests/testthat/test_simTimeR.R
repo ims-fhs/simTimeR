@@ -18,7 +18,7 @@ test_that("as.simDate() works", {
     strtoi(format(as.POSIXct("2014-12-31 23:59:59 CET"), "%j")) - 1)
 
   # Expect warning as implementation with POSIXct possible:
-  expect_warning(as.simDate("2014-01-01 00:00:00 CET"), )
+  # expect_warning(as.simDate("2014-01-01 00:00:00 CET"), )
 })
 
 test_that("as.simDateTime() works", {
@@ -33,7 +33,7 @@ test_that("as.simDateTime() works", {
   expect_equal(as.simDateTime("2014-12-31 23:59:59 CET"), dt3)
 
   # Expect warning as implementation with POSIXct possible:
-  expect_warning(as.simDateTime("2014-01-01 00:00:00 CET"), )
+  # expect_warning(as.simDateTime("2014-01-01 00:00:00 CET"), )
 })
 
 test_that("as.charTime() delivers the right time as str", {
@@ -47,7 +47,7 @@ test_that("as.charTime() delivers the right time as str", {
     format(as.POSIXct("2014-01-01 00:00:00 CET") + 68700, "%H:%M"))
 
   # Expect warning as implementation with POSIXct possible:
-  expect_warning(as.charTime(26400), )
+  # expect_warning(as.charTime(26400), )
 })
 
 test_that("simDate() delivers the right day of the year", {
@@ -64,7 +64,7 @@ test_that("simDate() delivers the right day of the year", {
     strtoi(format(as.POSIXct("2014-01-01 00:00:00 CET") + 365*24*60*60-1, "%j"))) #.....?
 
   # Expect warning as implementation with POSIXct possible:
-  expect_warning(simDate(0), )
+  # expect_warning(simDate(0), )
 })
 
 test_that("simTime() delivers the right number of seconds of the day", {

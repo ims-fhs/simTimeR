@@ -1,11 +1,18 @@
 Package: simTimeR
 Type: Package
-Title: Package to handle DateTimes as integers (called simDateTimes) for the smooth handling insiede simulations
-Version: 1.1
-Date: 2016-01-04
+Title: Package to handle DateTimes as integers (called simDateTimes)
+        for the smooth handling insiede simulations
+Version: 1.1.1
+Date: 2016-04-05
 Author: Adrian Schmid, Christoph Strauss
 Maintainer: Adrian Schmid <adrian.schmid@fhsg.ch>
-Description: simTimeR provides functions to coerce DateTimes to integer numbers (called simDateTime). The integer number represents seconds starting from 01.01.2014, 00:00:00. Also provides functions to access only the day of a simDateTime (as integer between 0 and 364) or only the time of a simDateTime (as integer between 0 and 24*60*60-1) or only the weekday as String (Mo, Di, Mi, Do, Fr, Sa, So)
+Description: simTimeR provides functions to coerce DateTimes to integer
+        numbers (called simDateTime). The integer number represents
+        seconds starting from 01.01.2014, 00:00:00. Also provides
+        functions to access only the day of a simDateTime (as integer
+        between 0 and 364) or only the time of a simDateTime (as
+        integer between 0 and 24*60*60-1) or only the weekday as String
+        (Mo, Di, Mi, Do, Fr, Sa, So)
 License: GPL (>= 2) just like R itself.
 LazyData: TRUE
 Suggests: testthat

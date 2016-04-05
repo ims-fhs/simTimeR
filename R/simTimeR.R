@@ -20,7 +20,7 @@ as.simTime <- function(datetime) {
 #'
 #' @return t A simDate
 as.simDate <- function(datetime) {
-  warning("Implementation via POSIXct possible. See testthat")
+  # warning("Implementation via POSIXct possible. See testthat")
   datetime <- as.character(datetime)
   days <- as.integer(strftime(datetime, "%j")) - 1 # Day of year. 1-365.
   return(days)
@@ -34,7 +34,7 @@ as.simDate <- function(datetime) {
 #'
 #' @return charTime A char containing a time in the format HH:MM
 as.charTime <- function(simTime) {
-  warning("Implementation via POSIXct possible. See testthat")
+  # warning("Implementation via POSIXct possible. See testthat")
   h <- trunc(simTime/60/60)
   if(h < 10) {h <- as.character(paste0(0,h))}
   m <- simTime %% (60*60)/60
@@ -49,7 +49,7 @@ as.charTime <- function(simTime) {
 #'
 #' @return the day of year (0-364)
 simDate <- function(t) {
-  warning("Implementation via POSIXct possible. See testthat. ToDo vals 0, 365?")
+  # warning("Implementation via POSIXct possible. See testthat. ToDo vals 0, 365?")
   return(trunc(t/(24*60*60)))
 }
 
@@ -60,7 +60,7 @@ simDate <- function(t) {
 #'
 #' @return the actual time in seconds (0-(24*60*60-1))
 simTime <- function(t) {
-  return(t %% (24*60*60))
+  return(t %% (24*60*60)) # ..................... t_h <- strptime(t, "%Y-%m-%d") => t-t_h
 }
 
 
@@ -84,7 +84,7 @@ simWeekday <- function(t) {
 #'
 #' @return t A simDateTime
 as.simDateTime <- function(datetime) {
-  warning("Implementation via POSIXct possible. See testthat")
+  # warning("Implementation via POSIXct possible. See testthat")
   seconds <- as.simDate(datetime)*24*60*60 + as.simTime(datetime)
   return(seconds)
 }
