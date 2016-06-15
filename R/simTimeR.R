@@ -69,9 +69,9 @@ simTime <- function(t) {
 #' @param t A simDateTime
 #'
 #' @return the weekday in the format: "Mo, Di, Mi, Do, Fr, Sa, So"
-simWeekday <- function(t) {
+simWeekday <- function(t, order = c("Mi", "Do", "Fr", "Sa", "So", "Mo", "Di")) {
 
-  rep(c("Mi", "Do", "Fr", "Sa", "So", "Mo", "Di"), length = 365)[simDate(t) + 1]
+  rep(order, length = 365)[simDate(t) + 1]
 }
 
 
