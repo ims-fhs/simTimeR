@@ -70,8 +70,10 @@ simTime <- function(t) {
 #'
 #' @return the weekday in the format: "Mo, Di, Mi, Do, Fr, Sa, So"
 simWeekday <- function(t, order = c("Mi", "Do", "Fr", "Sa", "So", "Mo", "Di")) {
-
-  rep(order, length = 365)[simDate(t) + 1]
+  # rep(order, length = 365)[simDate(t) + 1]
+  # Test alternative:
+  weekdays(as.POSIXct(t, tz = "GMT", origin = "2014-01-01 00:00:00"), abbreviate = T) # german "Do" "Fr" "Sa" "So" "Mo" "Di" "Mi"
+#   lubridate::wday(as.POSIXct(t_int[1], tz = "GMT", origin = "1970-01-01"), label = T, abbr = T) # english Thurs Fri   Sat   Sun   Mon   Tues  Wed
 }
 
 
