@@ -33,7 +33,7 @@ as.simDate <- function(datetime) {
 #' @param simTime
 #'
 #' @return charTime A char containing a time in the format HH:MM
-as.charTime <- function(simTime) {
+as.charTime <- function(simTime) { # ........................................... SQC zero_n
   # warning("Implementation via POSIXct possible. See testthat")
   h <- trunc(simTime/60/60)
   if(h < 10) {h <- as.character(paste0(0,h))}
