@@ -38,5 +38,5 @@ vehicles <- data.frame(
   lat = c(47.1, 47.3,46),
   lng = c(7.9, 8.1,8), stringsAsFactors = F)
 
-test_date <- ymd_hms("2016-06-16 14:16:53 CEST") # => "Thurs"
+test_date <- lubridate::ymd_hms("2016-06-16 14:16:53 CEST") # => "Thurs"
 

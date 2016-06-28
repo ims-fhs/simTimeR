@@ -1,3 +1,9 @@
+context("Synthetic data dummy")
+test_that("Synthetic data dummy", {
+  expect_equal(s_old_vehicles$id[1], 0)
+})
+
+context("basic functions...")
 test_that("as.simTime() works", {
   expect_equal(as.simTime("2014-01-01 00:00:00 CET"), 0)
   expect_equal(as.simTime("2014-01-02 00:00:00 CET"), 0)
