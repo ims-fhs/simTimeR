@@ -1,17 +1,6 @@
 # helper-synthetic_data for synthetic data like data.frames, ... .................. Clean up everything
 # Use helper file to set global test parameters available in all testthat sections
 
-# old_vehicles <- data.frame(
-#   id = c(0,1,911),
-#   year = rep(0, 3),
-#   busy_until = c(3e4,0,0), # "2016-01-01 08:20:00 UTC", "Fri"
-#   shift_from_simdate = c(0, 0, 186), # 186 not calculated.                      Depends on year! Wrong like this
-#   shift_to_simdate = c(365, 180, 365), # Not calculated.                        Depends on year! Wrong like this
-#   shift_from_simtime = c(0, 12*3600, 9*3600), # In most cases correct
-#   shift_to_simtime = c(24*3600, 18*3600, 19*3600),
-#   shift_weekday = c("Mo, Di, Mi, Do, Fr, Sa, So", "Mo, Di, Mi, Do, Fr", "Sa, So"),
-#   stringsAsFactors = F)
-
 vehicles <- data.frame(
   id = c(0,1,911),
   update = rep(0, 3), # update => Can be year, month, ...
@@ -33,10 +22,7 @@ missions <- data.frame(
   vehicle_id = c(1, 0, 1, 911, 0, 1, 911, 1, 0, 911),
   stringsAsFactors = F)
 
-labor0 <- data.frame(
-  t = 0,
-  dt = 365*24*3600,
-  idle = 0,
-  overtime = 0,
-  stringsAsFactors = F)
+labor1 <- as.labor.list(missions, vehicles[1, ])
+labor2 <- as.labor.list(missions, vehicles[2, ])
+labor3 <- as.labor.list(missions, vehicles[3, ])
 

@@ -83,11 +83,3 @@ is.schedule <- function(object) {
   return(res)
 }
 
-wday <- function(t, origin_date = "2014-01-01 00:00:00") {
-  weekdays(as.POSIXct(t, tz = "GMT", origin_date), abbreviate = T)
-}
-
-is_free <- function(object, t) {
-  return(vehicles[object$busy_until <= t,])
-}
-

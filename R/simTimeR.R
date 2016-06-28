@@ -78,10 +78,6 @@ simWeekday <- function(t, order = c("Mi", "Do", "Fr", "Sa", "So", "Mo", "Di")) {
   # imsbasics::e2g(as.character(lubridate::wday(as.POSIXct(t, tz = "GMT", origin = "2014-01-01 00:00:00"), label = T, abbr = T))) # english Thurs Fri   Sat   Sun   Mon   Tues  Wed
 }
 
-
-# =============================================================================
-# Functions with dependencies:
-
 #' Converts a DateTime to a simDateTime. Date + Time in seconds. Range 0- (365*24*60*60-1)
 #'
 #' @param datetime
@@ -93,7 +89,18 @@ as.simDateTime <- function(datetime) {
   return(seconds)
 }
 
-
-# =============================================================================
-# Not used any more:
-
+#' is_on_duty from sim911 package finds all vehicles that are on duty
+#'
+#' @param vehicles A set of class sim_vehicle
+#' @param t A numeric, relative time in seconds
+#' @import data.table
+#'
+#' @return vehicles class sim_vehicles, a subset of sim_vehicles
+#'
+is_on_duty <- function(t, vehicles) { # ........................................ rule?
+  return(vehicles$shift_from_simdate <= simTimeR::simDate(t) &
+      vehicles$shift_to_simdate >= simTimeR::simDate(t) &
+      vehicles$shift_from_simtime <= simTimeR::simTime(t) &
+      vehicles$shift_to_simtime > simTimeR::simTime(t) &
+      grepl(simTimeR::simWeekday(t), vehicles$shift_weekday))
+}

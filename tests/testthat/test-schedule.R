@@ -1,47 +1,78 @@
-context("schedule")
-test_that("schedule works", {
-#   expect_equal(as.simTime("2014-01-01 00:00:00 CET"), 0)
-#   expect_equal(as.simTime("2014-01-02 00:00:00 CET"), 0)
-#   expect_equal(as.simTime("2014-12-31 23:59:59 CET"), (24*60*60 - 1))
-  # g2e("So") == "Sun"
-  # g2e(c("So", "Di")) == c("Sun", "Tues")
-  # var <- g2e(c("So, Mo, Mi", "Di, Mi, Do, Fr"))
-  # var == c("Sun, Mon, Wed", "Tues, Wed, Thurs, Fri")
-  #
-  # e2g(g2e("So")) == "So"
-  # e2g(g2e(c("So", "Di"))) == c("So", "Di")
-  # e2g(var) == c("So, Mo, Mi", "Di, Mi, Do, Fr")
-  #
-  # test_sec <- date2simtime(test_date, origin_date)
-  # simtime2date(test_sec, origin_date) == test_date
-
-  # shift_from_simdate -1? ....................................................... ???
-  # shift_to_simdate -1?
-  # shift_to_simtime + 60?
-
-  # Test schedule functions
-  # ==============================================================================
-  # is_on_duty(test_sec, old_vehicles)
-  # test_sec %fast_sin% vehicles
-  # vehicles <- update_schedule(test_date, vehicles)
-  # test_sec %fast_sin% vehicles
-  # test_date %sin% vehicles # = TRUE  TRUE FALSE
-  # test_date2 %sin% vehicles  # = TRUE FALSE FALSE
-
-  # i3 <- interval(lubridate::ymd_hms("2016-02-01 12:00:00"),
-    #   lubridate::ymd_hms("2019-10-27 12:00:00"))
-    # i4 <- interval(lubridate::ymd_hms("2016-02-01 12:00:00"),
-    #   lubridate::ymd_hms("2019-01-01 00:00:00"))
-    # i_change <- lubridate::int_shift(i0, lubridate::dyears(0.5)) # start/ends at 12:00!
-    # yearly_intervals(i3)
-    # yearly_intervals(i4)
-
-  # new_labor1 <- labor_in_year_schar(labor_id1, vehicles[2, ])
-
-  # new_labor1b <- labor_in_schar(labor_id1, vehicles[2, ])
-  # labor_id0$labor <- c(labor_id0$labor,
-  #   lubridate::int_shift(labor_id0$labor, lubridate::ddays(380)))
-  # new_labor0 <- labor_in_schar(labor_id0, vehicles[1, ])
-
+context("language and dictionary")
+test_that("language and dictionary", {
+  expect_equal(g2e("So"), "Sun")
+    expect_equal(g2e(c("So", "Di")), c("Sun", "Tues"))
+  expect_equal(var <- g2e(c("So, Mo, Mi", "Di, Mi, Do, Fr")),
+    c("Sun, Mon, Wed", "Tues, Wed, Thurs, Fri"))
+  expect_equal(e2g(g2e("So")), "So")
+  expect_equal(e2g(g2e(c("So", "Di"))), c("So", "Di"))
+  expect_equal(e2g(var), c("So, Mo, Mi", "Di, Mi, Do, Fr"))
+  expect_equal(simtime2date(date2simtime(test_date, origin_date),
+    origin_date), test_date)
 })
 
+context("test time/date in schedule")
+test_that("test time/date in schedule", {
+  expect_equal(as.character(weekday(test_sec, origin_date)), "Thurs")
+  expect_equal(vehicles$shift_from_simdate, c(0,0,0))
+  expect_equal(vehicles$shift_from_simtime, c(0,0,0))
+  vehicles <- update_schedule(test_date, vehicles)
+  expect_equal(vehicles$shift_from_simdate, c(1, 1, 188))
+  expect_equal(vehicles$shift_from_simtime, c(0, 43200, 32400))
+  expect_equal(is_on_duty(test_sec, vehicles), c(F, F, F))
+  expect_equal(int_in_sint(test_sec, vehicles), c(T, T, F))
+  expect_equal(test_sec %fast_sin% vehicles, c(T, T, F))
+
+  expect_equal(test_sec %fast_sin% vehicles, c(T, T, F))
+  expect_equal(test_date %sin% vehicles, c(T, T, F))
+  expect_equal(test_date2 %sin% vehicles, c(T, F, F))
+})
+
+context("test schedule in interval")
+test_that("test schedule in interval", {
+  expect_equal(length(yearly_intervals(test_interval1)), 4)
+  expect_equal(as.character(class(yearly_intervals(test_interval1))), "Interval")
+  expect_equal(length(yearly_intervals(test_interval2)), 3)
+  expect_equal(length(yearly_intervals(test_interval3)), 5)
+
+  expect_equal(sum(schar_in_interval(vehicles[1, ], test_interval0)/dhours()), 366*24) #2016 is leap year
+  expect_equal(sum(schar_in_interval(vehicles[2, ], test_interval0)/dhours()), 780)
+  expect_equal(sum(schar_in_interval(vehicles[3, ], test_interval0)/dhours()), 510)
+})
+
+context("test labor in schedule")
+test_that("test labor in schedule", {
+
+  expect_equal(length(labor1$labor), 3)
+  expect_equal(labor1$overtime, NA)
+
+  new_labor1 <- labor_in_schar(labor1, vehicles[1, ])
+  expect_equal(length(new_labor1$labor), 3)
+  expect_equal(length(new_labor1$overtime), 0)
+  expect_equal(length(new_labor1$idle), 3)
+
+  # It is forbidden to work before the shift starts and
+  expect_error(labor_in_schar(labor2, vehicles[2, ]), )
+  # labor and schedule need to overlap
+  expect_error(labor_in_schar(labor3, vehicles[3, ]), "labor and schedule do not overlap")
+
+  # Further tests needed
+})
+
+context("%scheduled%")
+test_that("test %scheduled%", {
+  # browser()
+  expect_equal(test_date2 %scheduled% vehicles, c(T, F, F))
+  expect_equal(date2simtime(test_date2, origin_date) %scheduled% vehicles, c(T, F, F))
+
+  expect_equal(sum(vehicles[1, ] %scheduled% test_interval0/dhours()), 366*24) #2016 is leap year
+  expect_equal(sum(vehicles[2, ] %scheduled% test_interval0/dhours()), 780)
+  expect_equal(sum(vehicles[3, ] %scheduled% test_interval0/dhours()), 510)
+  expect_equal(length(vehicles[1, ] %scheduled% test_interval0), 366)
+  expect_equal(as.character(class(vehicles[1, ] %scheduled% test_interval0)), "Interval")
+
+  new_labor1 <- labor1 %scheduled% vehicles[1, ]
+  expect_equal(length(new_labor1$labor), 3)
+  expect_equal(length(new_labor1$overtime), 0)
+  expect_equal(length(new_labor1$idle), 3)
+})
