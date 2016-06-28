@@ -1,18 +1,18 @@
-Package: simTimeR
+Package: schedule
 Type: Package
-Title: Package to handle DateTimes as integers (called simDateTimes)
+Title: Package to handle schedules including datetimes as integers (called simdatetimes)
         for the smooth handling insiede simulations
-Version: 1.1.7
+Version: 2.0.0
 Date: 2016-06-28
 Author: Adrian Schmid, Christoph Strauss
 Maintainer: Adrian Schmid <adrian.schmid@fhsg.ch>
-Description: simTimeR provides functions to coerce DateTimes to integer
-        numbers (called simDateTime). The integer number represents
+Description: schedule provides functions to coerce datetimes to integer
+        numbers (called simdatetime). The integer number represents
         seconds starting from 01.01.2014, 00:00:00. Also provides
-        functions to access only the day of a simDateTime (as integer
-        between 0 and 364) or only the time of a simDateTime (as
-        integer between 0 and 24*60*60-1) or only the weekday as String
-        (Mo, Di, Mi, Do, Fr, Sa, So)
+        functions to access only the day of a simdatetime (as integer
+        between 0 and 364) or only the time of a simdatetime (as
+        integer between 0 and 24*60*60-1) or only the weekday as string
+        (Mon, Tues, Wed, Thurs, Fri, Sat, Sun)
 License: GPL (>= 2) just like R itself.
 LazyData: TRUE
 Suggests: testthat
