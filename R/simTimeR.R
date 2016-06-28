@@ -1,5 +1,5 @@
-# =============================================================================
-# Independent functions:
+# Old simtimer functions without changes for backwards compatibility (except
+# package name) - DO NOT MAKE CHANGES HERE!!!
 
 #' Converts a DateTime to a simTime. Only time part of datetime. range 0-(24*60*60-1).
 #' @param datetime
