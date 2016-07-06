@@ -1,28 +1,71 @@
 # .............................................................................. Check tz = "GMT" everywhere
-# From /Erste Testprogramme/51e schedule
-# data structure:
-# as.labor <- function(missions) {
-#   n <- nrow(missions)
-#   df <- data.frame(
-#     t = missions$t_alarm_sec,
-#     dt = missions$dt_to_completion,
-#     idle = rep(0, n),
-#     overtime = rep(0,n),
-#     stringsAsFactors = F)
-#   return(df)
-# }
+#                                                                                mark benchmark tests as such...
+# Nach jetzigem wissen gibt es folgende Reihenfolgen was Schnelligkeit anbelangt: ... tbd
+# * %scheduled% slow, for everything
+# * %sin% handles all "t in schedule"
+# * %fast_sin% only for "int_in...". Drawback: Needs int has to be converted to
+#      date to  check whether update is necessary.
+# * int_in_sint. Uses our weekday function, generic!
+# * Further speed-up with extra columns in missions:
+#    - t_alarm_year
+#    - t_alarm_weekday
+#    - t_alarm_simdate (0-365)
+#    - t_alarm_simtime
 
-# is.labor <- function(labor) {
-#   ifelse(all(c("t", "dt", "idle", "overtime") %in% names(labor)), return(T), return(F))
-# } # ............................................ Needed?
+# Discuss odl structre of schedule including weekdays: In case of schedule change ... ?
 
+#' weekday is a customized lubridate/as.POSIXct function
+#'
+#' @param t
+#' @param origin_date
+#'
+#' @return weekday as character. One of Sun < Mon < Tues < Wed < Thurs < Fri < Sat
+#'
+weekday <- function(t, origin_date = "2014-01-01 00:00:00", tz = "GMT") {
+  return(lubridate::wday(as.POSIXct(t, tz, origin_date), label = T, abbr = T))
+} # ... Check all arguments
+
+first_day_of_year <- function(y) {
+  return(lubridate::ymd_hms(paste0(y, "-01-01 00:00:00")))
+}
+
+date2simtime <- function(date, origin_date) {
+  return(as.numeric(date - origin_date, units = "secs"))
+}
+
+simtime2date <- function(t, origin_date) { # as.date or just t + origin?
+  return(origin_date + t)
+}
+
+as.schedule <- function(object) {
+  # Could be used to add schedule to object
+} # ........................................ Not used
+is.schedule <- function(object) {
+  if (length(grepl("|", object)) == nrow(object) &
+      length(grepl("--", object)) == nrow(object) &
+      all(c("schedule", "update", "shift_from_simdate", "shift_to_simdate",
+            "shift_from_simtime", "shift_to_simtime") %in% names(object)) &
+      any(grepl(" ", object)) == F) {
+    return(T)
+  } else {
+    return(F)
+  }
+}
+
+#' as.labor.list converts missions data.frame to labor-class
+#'
+#' @param missions
+#' @param vehicle
+#'
+#' @return labor
+#'
 as.labor.list <- function(missions, vehicle) {
   missions <- missions[missions$vehicle_id == vehicle$id, ]
   labor <- list(
     vehicle_id = vehicle$id,
     schedule = vehicle$schedule,
     labor = lubridate::interval(origin_date + missions$t_alarm_sec,
-      origin_date + missions$t_alarm_sec + missions$dt_to_completion),
+                                origin_date + missions$t_alarm_sec + missions$dt_to_completion),
     productive = NA,
     idle = NA,
     overtime = NA,
@@ -30,14 +73,14 @@ as.labor.list <- function(missions, vehicle) {
   class(labor) <- c(class(labor), "labor")
   return(labor)
 }
-
-# Basics functions
-weekday <- function(t, origin_date = "2014-01-01 00:00:00") {
-  return(lubridate::wday(as.POSIXct(t, tz = "GMT", origin_date), label = T, abbr = T))
-}
-
-is_free <- function(object, t) {
-  return(vehicles[object$busy_until <= t,])
+is.labor.list <- function(object) {
+  if (all(c("vehicle_id", "schedule", "labor", "productive", "idle", "overtime") %in%
+          names(object)) &
+      "labor" %in% class(object)) {
+    return(T)
+  } else {
+    return(F)
+  }
 }
 
 calculate_shift_simdate <- function(y, date_df, type=stop("Argument from or to needed")) {
@@ -50,7 +93,7 @@ calculate_shift_simdate <- function(y, date_df, type=stop("Argument from or to n
     stop("Argument from or to needed")
   }
   dates_abbr <- as.data.frame(strsplit(as.character(date_df[i, ]), split = "-", fixed = T),
-    stringsAsFactors = F) # col.names = c("a", "b", "c") = 3 vehicles
+    stringsAsFactors = F)
   dates <- as.character(ints$e2int[as.character(dates_abbr[1, ])])
   return(lubridate::yday(paste(y, dates, dates_abbr[2, ], sep = "-")))
 }
@@ -65,16 +108,20 @@ calculate_shift_simtime <- function(y, time_df, type=stop("Argument from or to n
     stop("Argument from or to needed")
   }
   time_abbr <- as.data.frame(strsplit(as.character(time_df[i, ]), split = "-", fixed = T),
-    stringsAsFactors = F) # col.names = c("a", "b", "c") = 3 vehicles
+    stringsAsFactors = F)
   time <- as.data.frame(strsplit(as.character(time_abbr), split = ":", fixed = T),
-    stringsAsFactors = F)  # col.names = c("a", "b", "c") = 3 vehicles
+    stringsAsFactors = F)
   return(60 * (60 * as.integer(time[1, ]) + as.integer(time[2, ])))
 }
 
-first_day_of_year <- function(y) {
-  return(lubridate::ymd_hms(paste0(y, "-01-01 00:00:00")))
-}
-
+#' yearly_intervals splits lubridate interval which does not end in the same year
+#' into an array of intervals, each containing a lubridate interval which ends in
+#' the same year.
+#'
+#' @param interval
+#'
+#' @return array of intervals
+#'
 yearly_intervals <- function(interval) {
   start_date <- lubridate::int_start(interval)
   end_date <- lubridate::int_end(interval)
@@ -84,7 +131,6 @@ yearly_intervals <- function(interval) {
     my_array <- c(my_array, rep(my_years[i], 2))
   }
   my_array <- c(my_array, my_years[length(my_years)])
-  # browser()
   interval_on_year_base <- first_day_of_year(my_array)
   interval_on_year_base[1] <- start_date
   interval_on_year_base[length(interval_on_year_base)] <- end_date
@@ -98,47 +144,59 @@ yearly_intervals <- function(interval) {
   return(res)
 }
 
+#' update_schedule updates the schedule part of any object containing
+#' update, shift_from_simdate shift_to_simdate, shift_from_simtime and shift_to_simtime
+#'
+#' @param date
+#' @param schedule
+#'
+#' @return schedule
+#'
 update_schedule <- function(date, schedule) {
   assertthat::assert_that(all(c("update", "shift_from_simdate", "shift_to_simdate",
     "shift_from_simtime", "shift_to_simtime", "shift_weekday", "schedule") %in% names(schedule)))
-  # tz <- lubridate::tz(date)
   y <- lubridate::year(date)
   schedule$update <- rep(y, nrow(schedule))
-  # browser()
   df <- as.data.frame(strsplit(schedule$schedule, split = "|", fixed = T),
-    stringsAsFactors = F) # col.names = c("a", "b", "c") = 3 vehicles
+    stringsAsFactors = F)
 
   # Update dates
   date_df <- as.data.frame(strsplit(as.character(df[1, ]), split = "--", fixed = T),
-    stringsAsFactors = F) # col.names = c("a", "b", "c") = 3 vehicles
+    stringsAsFactors = F)
   schedule$shift_from_simdate <- calculate_shift_simdate(y, date_df, "from")
   schedule$shift_to_simdate <- calculate_shift_simdate(y, date_df, "to")
 
   # Update time
   time_df <- as.data.frame(strsplit(as.character(df[2, ]), split = "--", fixed = T),
-    stringsAsFactors = F) # col.names = c("a", "b", "c") = 3 vehicles
+    stringsAsFactors = F)
   schedule$shift_from_simtime <- calculate_shift_simtime(y, time_df, "from")
   schedule$shift_to_simtime <- calculate_shift_simtime(y, time_df, "to")
 
-  # Update shift_weekdays
-  schedule$shift_weekday <- as.character(df[3, ])
+  # schedule$shift_weekday <- as.character(df[3, ]) # .......................... Not necessary
 
   assign("schedule", schedule, envir = .GlobalEnv)
   return(schedule)
 }
 
+#' calculate_daily_times calculates overtime, idle time... on a daily (0h-24h) basis.
+#' Schedule needs not to be updated. Called in labor_in_year_schar
+#'
+#' @param labor
+#' @param schedule
+#' @param idle2overtime = F, is idle time outside labortime considered to idle or
+#' overtime? Depends on application
+#'
+#' @return labor
+#'
 calculate_daily_times <- function(labor, planned_times, idle2overtime = F) {
-  library(lubridate)
+  library(lubridate) # needed for %within%
   # Check, that only one day is considered
-  cond_same_day <- lubridate::wday(lubridate::int_start(planned_times)) == lubridate::wday(lubridate::int_start(labor$labor))
+  cond_same_day <- lubridate::wday(lubridate::int_start(planned_times)) ==
+    lubridate::wday(lubridate::int_start(labor$labor))
   remaining <- labor$labor[cond_same_day]
-  # planned_times %within% remaining # [1] FALSE FALSE FALSE FALSE FALSE not useful
   cond_productive <- remaining %within% planned_times
-  # [1]  TRUE  TRUE FALSE FALSE ... productive
   cond_overlap <- lubridate::int_overlaps(remaining, planned_times)
-  # [1]  TRUE  TRUE  TRUE FALSE ... Change from F to T !!!
   cond_split <- xor(cond_productive, cond_overlap)
-  # [1] FALSE FALSE  TRUE FALSE
 
   # Separate initial idle-possibility
   start_date_plan <- lubridate::int_start(planned_times)
@@ -149,7 +207,7 @@ calculate_daily_times <- function(labor, planned_times, idle2overtime = F) {
   if (start_date_labor < start_date_plan) {
     stop("start_date_labor < start_date_plan not possible")
   } else if (start_date_labor == start_date_plan) {
-    # Do nothing idle time 0
+    # Do nothing, idle time 0
   } else {
     idle <- c(idle, lubridate::interval(start_date_plan, start_date_labor))
   }
@@ -195,7 +253,16 @@ calculate_daily_times <- function(labor, planned_times, idle2overtime = F) {
   return(labor)
 }
 
-# Topic time or "date %in% schedule"
+#' int_in_sint is the fast version of is_on_duty but
+#' * using weekday calculated from calendar
+#' * returns T/F array in order to subset whatever necessary,
+#'    e.g. vehicles[int_in_sint(t, vehicles), ]
+#'
+#' @param t
+#' @param vehicles
+#'
+#' @return T/F array
+#'
 int_in_sint <- function(t, vehicles) {
   return(vehicles$shift_from_simdate <= simTimeR::simDate(t) &
       vehicles$shift_to_simdate >= simTimeR::simDate(t) &
@@ -204,39 +271,49 @@ int_in_sint <- function(t, vehicles) {
       grepl(weekday(t), vehicles$shift_weekday))
 } # ................................... rule, vectorized!
 
-int_in_schar <- function(t, vehicles) {
-  mydate<- simtime2date(t, origin_date)
-  vehicles <- update_schedule(mydate, vehicles)
-  return(int_in_sint(t, vehicles))
-}
-
 posix_in_sint <- function(date, vehicles) {
   t <- date2simtime(date, origin_date)
   return(int_in_sint(t, vehicles))
 }
 
+#' %fast_sin% fast wrapper for ...................................... How to handle tz and origin_date
+#' * int_in_sint and
+#' * "int_in_schar" which does not exist as extra function (only update_schedule necessary)
+#'
+#' @param t
+#' @param vehicles
+#'
+#' @return
+#' @export
+#'
+#' @examples
 `%fast_sin%` <- function(t, vehicles) {
   mydate <- simtime2date(t, origin_date)
-  if (lubridate::year(mydate) != vehicles$update[1]) { # & vehicles$update[1] != 0?
+  if (lubridate::year(mydate) != vehicles$update[1]) {
     vehicles <- update_schedule(mydate, vehicles)
   }
   res <- int_in_sint(t, vehicles)
   return(res)
-} # fast wrapper for int_in_ functions
+}
 
+#' %sin% checks whether t is in schedule for the following possible formats:
+#' * int, sint => fast_sin
+#' * int, schar => fast_sin
+#' * posix, sint
+#' * posix, schar
+#'
+#' @param t
+#' @param vehicles
+#'
+#' @return
+#' @export
+#'
+#' @examples
 `%sin%` <- function(t, vehicles) {
   if (class(t)[1] == "integer" | class(t)[1] == "numeric") {
+    # Use %fast_sin% to check whether int is "in" schedule
     res <- t %fast_sin% vehicles
   } else {
-    # if (lubridate::year(t) == vehicles$update[1]) {
-#       if (vehicles$update[1] != 0) {
-#         res <- posix_in_sint(t, vehicles)
-#       } else {
-#         # Corresponds to posix_in_schar
-#         vehicles <- update_schedule(t, vehicles)
-#         res <- int_in_sint(t, vehicles)
-#       }
-#     }
     if (lubridate::year(t) == vehicles$update[1]) {
       res <- posix_in_sint(t, vehicles)
     } else {
@@ -246,11 +323,19 @@ posix_in_sint <- function(date, vehicles) {
     }
   }
   return(res)
-} # wrapper for above 4 functions
+}
 
-# Topic "schedule %in% interval" => Calculate planned labor in interval
+#' sint_in_year_interval Calculates planned labor in interval on a yearly basis
+#'
+#' @param schedule
+#' @param interval
+#'
+#' @return
+#' @export
+#'
+#' @examples
 sint_in_year_interval <- function(schedule, interval) {
-  library(lubridate)
+  library(lubridate) # needed for %within%
   assertthat::assert_that(nrow(schedule) == 1)
   # Array containing all days in interval:
   start_date <- lubridate::floor_date(lubridate::int_start(interval), "day")
@@ -294,20 +379,36 @@ sint_in_year_interval <- function(schedule, interval) {
   return(res)
 }
 
+#' sint_in_interval obsolete. Throws error
+#'
+#' @param schedule
+#' @param interval
+#'
+#' @return error
+#'
 sint_in_interval <- function(schedule, interval) {
   stop("In case of change in year, schedule needs to update. Use schar_in_interval")
-} # obsolete. Throws error
+}
 
+#' schar_in_interval calculates the planned labor time of a schedule in the interval.
+#' Used to calculate planned labor time and as basis for calculation of overtime, ...
+#'
+#' @param schedule
+#' @param interval
+#'
+#' @return intervals
+#'
 schar_in_interval <- function(schedule, interval) {
   start_date <- lubridate::floor_date(lubridate::int_start(interval), "day")
   end_date <- lubridate::floor_date(lubridate::int_end(interval), "day")
   if (lubridate::year(start_date) == lubridate::year(end_date - 0.001)) {
+    # Interval is fully contained in onbe calendar year
     schedule <- update_schedule(lubridate::int_start(interval), schedule)
     res <- sint_in_year_interval(schedule, interval)
   } else {
-    # browser()
     my_intervals <- yearly_intervals(interval)
     schedule <- update_schedule(lubridate::int_start(my_intervals[1]), schedule)
+    # First interval also used as initialization
     res <- sint_in_year_interval(schedule, my_intervals[1])
     for (i in 2:(length(my_intervals))) {
       start <- lubridate::int_start(my_intervals[i])
@@ -318,16 +419,23 @@ schar_in_interval <- function(schedule, interval) {
   return(res)
 }
 
-# Topic "labor %in% schedule" => Calculate overtime, ...
+#' labor_in_year_schar calculates overtime, idle time... on a yearly basis.
+#' Schedule needs not to be updated. Called in labor_in_schar
+#'
+#' @param labor
+#' @param schedule
+#'
+#' @return labor
+#'
 labor_in_year_schar <- function(labor, schedule) {
-  # browser()
   assertthat::assert_that(all(class(labor) == c("list", "labor")))
   assertthat::assert_that(labor$vehicle_id == schedule$id)
-  # Not true after call for first day???
+  # Ensure that you start with a clean labor (Do not mix years):
   assertthat::assert_that(as.numeric(as.duration(labor$idle), units = "secs") == 0 |
       is.na(labor$idle))
   assertthat::assert_that(as.numeric(as.duration(labor$overtime), units = "secs") == 0 |
       is.na(labor$overtime))
+
   start_date <- min(lubridate::int_start(labor$labor))
   end_date <- max(lubridate::int_end(labor$labor))
   assertthat::assert_that(lubridate::year(start_date) == lubridate::year(end_date - 0.001))
@@ -335,12 +443,12 @@ labor_in_year_schar <- function(labor, schedule) {
 
   year_range <- lubridate::interval(lubridate::floor_date(start_date, "day"),
     lubridate::ceiling_date(end_date, "day"))
-  planned_times <- schar_in_interval(schedule, year_range) # array
+  planned_times <- schar_in_interval(schedule, year_range)
   if (length(planned_times) == 0) {
     stop("labor and schedule do not overlap")
   }
-  # considered <- logical(length(labor$labor))
   start_date_plan <- lubridate::int_start(planned_times)
+  # Initialize lubridate intervals:
   productive <- lubridate::interval(start_date_plan, start_date_plan)
   idle <- lubridate::interval(start_date_plan, start_date_plan)
   overtime <- lubridate::interval(start_date_plan, start_date_plan)
@@ -349,27 +457,37 @@ labor_in_year_schar <- function(labor, schedule) {
     r <- calculate_daily_times(labor, planned_times[i], idle2overtime = F)
     idle <- c(idle, r$idle); productive <- c(productive, r$productive); overtime <- c(overtime, r$overtime); rm(r)
   }
+  # Get rid of initialization. Ensure intervals to be unique
   labor$idle <- unique(idle[!as.numeric(as.duration(idle), units = "secs") == 0])
   labor$overtime <- unique(overtime[!as.numeric(as.duration(overtime), units = "secs") == 0])
   labor$productive <- unique(productive[!as.numeric(as.duration(productive), units = "secs") == 0])
   return(labor)
 }
 
+#' labor_in_schar calculates overtime, idletime, ...
+#'
+#' @param labor
+#' @param schedule
+#'
+#' @return labor
+#'
 labor_in_schar <- function(labor, schedule) {
-  library(lubridate)
+  library(lubridate) # needed for %within%
   start_date <- min(lubridate::int_start(labor$labor))
   end_date <- max(lubridate::int_end(labor$labor))
   if (lubridate::year(start_date) == lubridate::year(end_date - 0.001)) {
+    # labor contained in one calendar year, that is the easy case:
     labor <- labor_in_year_schar(labor, schedule)
   } else {
+    # labor not contained in one calendar year, calculate for each year separately:
     total_span <- lubridate::interval(lubridate::floor_date(start_date, "day"),
       lubridate::ceiling_date(end_date, "day"))
     my_intervals <- yearly_intervals(total_span)
     for (i in 1:(length(my_intervals))) {
-      browser()
       schedule <- update_schedule(lubridate::int_start(my_intervals[i]), schedule)
       my_labor <- labor
       my_labor$labor <- labor$labor[labor$labor %within% my_intervals[i]]
+      # Initialize lubridate intervals:
       my_labor$idle <- lubridate::interval("1900-01-01 00:00:00", "1900-01-01 00:00:00")
       my_labor$overtime <- lubridate::interval("1900-01-01 00:00:00", "1900-01-01 00:00:00")
       my_labor$productive <- lubridate::interval("1900-01-01 00:00:00", "1900-01-01 00:00:00")
@@ -391,6 +509,7 @@ labor_in_schar <- function(labor, schedule) {
       }
       rm(my_labor)
     }
+    # Get rid of initialization. Ensure intervals to be unique
     labor$idle <- unique(labor$idle[!as.numeric(
       as.duration(labor$idle), units = "secs") == 0])
     labor$overtime <- unique(labor$overtime[!as.numeric(
@@ -401,23 +520,33 @@ labor_in_schar <- function(labor, schedule) {
   return(labor)
 }
 
-# Wrapper for whole functionality:
+#' %scheduled% is a wrapper for whole schedule functionality, covering the
+#' 3 cases
+#' * Is a date "in" the schedule = Is somebody avaailable at t
+#' * Is a schedule "in" an timedate interval = What are the "available times" of a schedule
+#' * Are labor times "in" schedule = Calculate overtime, idletime, ...
+#'
+#' @param lhs
+#' @param rhs
+#'
+#' @return According to the above cases: T/F, lubridate::intervals or labor
+#'
 `%scheduled%` <- function(lhs, rhs) {
   if (all(class(lhs) == c("POSIXct", "POSIXt")) &
       class(rhs) == "data.frame") {
-    # time or date %in% schedule
+    # Datetime in schedule. Return T/F
     return(lhs %sin% rhs)
   } else if (all(class(lhs) == "numeric") &
       as.character(class(rhs)) == "data.frame") {
-    # schedule %in% interval
-    lhs %sin% rhs
+    # integer time (seconds) in schedule. Return T/F
     return(lhs %sin% rhs)
   } else if (all(class(lhs) == "data.frame") &
       as.character(class(rhs)) == "Interval") {
-    # schedule %in% interval
+    # schedule in interval. Return interval
     return(schar_in_interval(lhs, rhs))
   } else if (all(class(lhs) == c("list", "labor")) &
       class(rhs) == "data.frame") {
+    # labor in schedule. Return labor
     return(labor_in_schar(lhs, rhs))
   } else {
     stop("Wrong classes of lhs or rhs.")

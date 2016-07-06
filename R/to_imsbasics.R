@@ -64,22 +64,5 @@ e2g <- function(eng_expr) {
   return(res)
 }
 
-date2simtime <- function(date, origin_date) { # as.simtime?
-  return(as.numeric(date - origin_date, units = "secs"))
-}
 
-simtime2date <- function(t, origin_date) { # as.date or just t + origin?
-  return(origin_date + t)
-}
-
-is.schedule <- function(object) {
-  res <- F
-  if (length(grepl("|", object)) == nrow(object) &
-      length(grepl("--", object)) == nrow(object) &
-      all(c("schedule", "update") %in% names(vehicles)) &
-      any(grepl(" ", object)) == T) {
-    res <- T
-  }
-  return(res)
-}
 

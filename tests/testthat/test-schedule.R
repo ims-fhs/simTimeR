@@ -38,6 +38,7 @@ test_that("test schedule in interval", {
   expect_equal(sum(schar_in_interval(vehicles[1, ], test_interval0)/dhours()), 366*24) #2016 is leap year
   expect_equal(sum(schar_in_interval(vehicles[2, ], test_interval0)/dhours()), 780)
   expect_equal(sum(schar_in_interval(vehicles[3, ], test_interval0)/dhours()), 510)
+  expect_equal(sum(schar_in_interval(vehicles[2, ], test_interval1)/dhours()), 2988) # Estimate: (3*365/2+2*30.5)*5/7*6 = 2607.857
 })
 
 context("test labor in schedule")
@@ -61,7 +62,6 @@ test_that("test labor in schedule", {
 
 context("%scheduled%")
 test_that("test %scheduled%", {
-  # browser()
   expect_equal(test_date2 %scheduled% vehicles, c(T, F, F))
   expect_equal(date2simtime(test_date2, origin_date) %scheduled% vehicles, c(T, F, F))
 

@@ -9,7 +9,7 @@ vehicles <- data.frame(
   shift_to_simdate = c(0, 0, 0), # Not calculated.
   shift_from_simtime = c(0, 0, 0), # In most cases correct
   shift_to_simtime = c(0, 0, 0),
-  shift_weekday = character(3),
+  shift_weekday = c("Mon,Tues,Wed,Thurs,Fri,Sat,Sun", "Mon,Tues,Wed,Thurs,Fri", "Sat,Sun"),
   schedule = c( # Needs wrapper 24:00 = 00:00 next day
     "Jan-01--Dec-31|00:00--24:00|Mon,Tues,Wed,Thurs,Fri,Sat,Sun", # ............ 24:00 works?
     "Jan-01--Jun-30|12:00--18:00|Mon,Tues,Wed,Thurs,Fri",
