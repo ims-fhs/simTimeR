@@ -52,6 +52,29 @@ is.schedule <- function(object) {
   }
 }
 
+#' gsub2 extends gsub to a pre-defined english-german dictionary
+#'
+#' @param translation , a dictionary
+#' @param x, a character, to be translated
+#' @param ...
+#'
+#' @return
+#'
+gsub2 <- function(translation, x, ...) {
+  for(i in names(translation)) {
+    x <- gsub(i, translation[i], x, ...)
+  }
+  return(x)
+} # ................................. imsbasics
+
+schedule_g2e <- function(schedule) {
+  ints <- schedule::int_dict()
+  dict <- schedule::dict()
+  res <- gsub2(dict$g2e, paste(schedule, collapse = "%"))
+  res <- unlist(strsplit(res, split = "%", fixed = T))
+
+}
+
 #' as.labor.list converts missions data.frame to labor-class
 #'
 #' @param missions
@@ -87,15 +110,19 @@ calculate_shift_simdate <- function(y, date_df, type=stop("Argument from or to n
   ints <- int_dict()
   if (type == "from") {
     i <- 1
+    correct <- 1
   } else if (type == "to") {
     i <- 2
+    correct <- 0
   } else {
     stop("Argument from or to needed")
   }
-  dates_abbr <- as.data.frame(strsplit(as.character(date_df[i, ]), split = "-", fixed = T),
+  dates_abbr_list <- strsplit(as.character(date_df[i, ]), split = "-", fixed = T)
+  dates_abbr <- as.data.frame(dates_abbr_list, col.names = c(1:length(dates_abbr_list)),
     stringsAsFactors = F)
-  dates <- as.character(ints$e2int[as.character(dates_abbr[1, ])])
-  return(lubridate::yday(paste(y, dates, dates_abbr[2, ], sep = "-")))
+  month <- as.character(ints$e2int[as.character(dates_abbr[1, ])])
+  day <- as.character(dates_abbr[2, ])
+  return(lubridate::yday(paste(y, month, day, sep = "-")) - correct)
 }
 
 calculate_shift_simtime <- function(y, time_df, type=stop("Argument from or to needed")) {
@@ -161,8 +188,12 @@ update_schedule <- function(date, schedule) {
     stringsAsFactors = F)
 
   # Update dates
-  date_df <- as.data.frame(strsplit(as.character(df[1, ]), split = "--", fixed = T),
+  # date_df <- as.data.frame(strsplit(as.character(df[1, ]), split = "--", fixed = T),
+  #   stringsAsFactors = F)
+  date_list <- strsplit(as.character(df[1, ]), split = "--", fixed = T)
+  date_df <- as.data.frame(date_list, col.names = c(1:length(date_list)),
     stringsAsFactors = F)
+
   schedule$shift_from_simdate <- calculate_shift_simdate(y, date_df, "from")
   schedule$shift_to_simdate <- calculate_shift_simdate(y, date_df, "to")
 
