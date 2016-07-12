@@ -3,8 +3,8 @@ Type: Package
 Title: Package to handle schedules including datetimes as integers
         (called simdatetimes) for the smooth handling insiede
         simulations
-Version: 2.0.6
-Date: 2016-07-11
+Version: 2.0.7
+Date: 2016-07-12
 Author: Adrian Schmid, Christoph Strauss
 Maintainer: Adrian Schmid <adrian.schmid@fhsg.ch>
 Description: schedule provides functions to coerce datetimes to integer

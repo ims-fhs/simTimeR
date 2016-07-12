@@ -171,8 +171,9 @@ yearly_intervals <- function(interval) {
   return(res)
 }
 
-#' update_schedule updates the schedule part of any object containing
+#' update_schedule updates the schedule-part of any object containing
 #' update, shift_from_simdate shift_to_simdate, shift_from_simtime and shift_to_simtime
+#' IF ist update flag is not up to date
 #'
 #' @param date
 #' @param schedule
@@ -180,32 +181,40 @@ yearly_intervals <- function(interval) {
 #' @return schedule
 #'
 update_schedule <- function(date, schedule) {
-  assertthat::assert_that(all(c("update", "shift_from_simdate", "shift_to_simdate",
-    "shift_from_simtime", "shift_to_simtime", "shift_weekday", "schedule") %in% names(schedule)))
   y <- lubridate::year(date)
-  schedule$update <- rep(y, nrow(schedule))
-  df <- as.data.frame(strsplit(schedule$schedule, split = "|", fixed = T),
-    stringsAsFactors = F)
+  if (schedule$update[1] != y) {
+    assertthat::assert_that(all(c("update", "shift_from_simdate", "shift_to_simdate",
+                                  "shift_from_simtime", "shift_to_simtime", "shift_weekday", "schedule") %in% names(schedule)))
+    schedule$update <- rep(y, nrow(schedule))
+    message(paste0("update_schedule: ", date, ", new year ", schedule$update[1]))
+    df <- as.data.frame(strsplit(schedule$schedule, split = "|", fixed = T),
+                        stringsAsFactors = F)
+    # browser()
+    assertthat::assert_that(assertthat::noNA(schedule$id))
+    # Update dates
+    # date_df <- as.data.frame(strsplit(as.character(df[1, ]), split = "--", fixed = T),
+    #   stringsAsFactors = F)
+    date_list <- strsplit(as.character(df[1, ]), split = "--", fixed = T)
+    date_df <- as.data.frame(date_list, col.names = c(1:length(date_list)),
+                             stringsAsFactors = F)
+    assertthat::assert_that(assertthat::noNA(schedule$id))
 
-  # Update dates
-  # date_df <- as.data.frame(strsplit(as.character(df[1, ]), split = "--", fixed = T),
-  #   stringsAsFactors = F)
-  date_list <- strsplit(as.character(df[1, ]), split = "--", fixed = T)
-  date_df <- as.data.frame(date_list, col.names = c(1:length(date_list)),
-    stringsAsFactors = F)
+    schedule$shift_from_simdate <- calculate_shift_simdate(y, date_df, "from")
+    schedule$shift_to_simdate <- calculate_shift_simdate(y, date_df, "to")
+    assertthat::assert_that(assertthat::noNA(schedule$id))
 
-  schedule$shift_from_simdate <- calculate_shift_simdate(y, date_df, "from")
-  schedule$shift_to_simdate <- calculate_shift_simdate(y, date_df, "to")
+    # Update time
+    time_df <- as.data.frame(strsplit(as.character(df[2, ]), split = "--", fixed = T),
+                             stringsAsFactors = F)
+    schedule$shift_from_simtime <- calculate_shift_simtime(y, time_df, "from")
+    schedule$shift_to_simtime <- calculate_shift_simtime(y, time_df, "to")
+    assertthat::assert_that(assertthat::noNA(schedule$id))
 
-  # Update time
-  time_df <- as.data.frame(strsplit(as.character(df[2, ]), split = "--", fixed = T),
-    stringsAsFactors = F)
-  schedule$shift_from_simtime <- calculate_shift_simtime(y, time_df, "from")
-  schedule$shift_to_simtime <- calculate_shift_simtime(y, time_df, "to")
-
-  # schedule$shift_weekday <- as.character(df[3, ]) # .......................... Not necessary
-
-  assign("schedule", schedule, envir = .GlobalEnv)
+    assign("schedule", schedule, envir = .GlobalEnv)
+    assertthat::assert_that(assertthat::noNA(schedule$id))
+  } else {
+    # Do nothing as schedule is already up to date.
+  }
   return(schedule)
 }
 
@@ -315,9 +324,6 @@ posix_in_sint <- function(date, vehicles) {
 #' @param vehicles
 #'
 #' @return
-#' @export
-#'
-#' @examples
 `%fast_sin%` <- function(t, vehicles) {
   mydate <- simtime2date(t, origin_date)
   if (lubridate::year(mydate) != vehicles$update[1]) {
@@ -563,20 +569,18 @@ labor_in_schar <- function(labor, schedule) {
 #' @return According to the above cases: T/F, lubridate::intervals or labor
 #'
 `%scheduled%` <- function(lhs, rhs) {
-  if (all(class(lhs) == c("POSIXct", "POSIXt")) &
-      class(rhs) == "data.frame") {
+  c_lhs <- as.character(class(lhs))
+  c_rhs <- as.character(class(rhs))
+  if (all(c_lhs == c("POSIXct", "POSIXt")) & "schedule" %in% c_rhs) {
     # Datetime in schedule. Return T/F
     return(lhs %sin% rhs)
-  } else if (all(class(lhs) == "numeric") &
-      as.character(class(rhs)) == "data.frame") {
+  } else if (all(c_lhs == "numeric") & "schedule" %in% c_rhs) {
     # integer time (seconds) in schedule. Return T/F
     return(lhs %sin% rhs)
-  } else if (all(class(lhs) == "data.frame") &
-      as.character(class(rhs)) == "Interval") {
+  } else if (all("schedule" %in% c_lhs) & all(c_rhs == "Interval")) {
     # schedule in interval. Return interval
     return(schar_in_interval(lhs, rhs))
-  } else if (all(class(lhs) == c("list", "labor")) &
-      class(rhs) == "data.frame") {
+  } else if (all("labor" %in% c_lhs) & "schedule" %in% c_rhs) {
     # labor in schedule. Return labor
     return(labor_in_schar(lhs, rhs))
   } else {

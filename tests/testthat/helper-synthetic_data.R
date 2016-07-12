@@ -15,6 +15,7 @@ vehicles <- data.frame(
     "Jan-01--Jun-30|12:00--18:00|Mon,Tues,Wed,Thurs,Fri",
     "Jul-06--Dec-31|09:00--19:00|Sat,Sun"),
   stringsAsFactors = F)
+class(vehicles) <- c("data.frame", "schedule")
 
 missions <- data.frame(
   t_alarm_sec = c(1245, 1405, 3922, 6117, 8611, 8840, 10022, 11764, 12724, 13716),

@@ -7,6 +7,7 @@ Sys.setlocale(category = "LC_ALL", locale = "English_United States.1252") # ....
 path <- ""
 data <- imsbasics::load_rdata("Z-testdata_bdmchv_LUKS2015", path)
 r_vehicles <- data$hist_vehicles # ............................................. synthetic data with s_variable?
+class(r_vehicles) <- c("data.frame", "schedule")
 
 origin_date = lubridate::ymd_hms("2016-01-01 00:00:00")
 test_date <- lubridate::ymd_hms("2016-06-16 14:16:53 CEST") # => "Thurs"
