@@ -1,3 +1,7 @@
+#' Title
+#'
+#' @return
+#' @export
 dict <- function() {
   dict_g2e <- setNames(
     c("Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat", "Jan", "Feb", "Mar",
@@ -13,6 +17,10 @@ dict <- function() {
   return(list(g2e = dict_g2e, e2g = dict_e2g))
 }
 
+#' Title
+#'
+#' @return
+#' @export
 int_dict <- function() {
   dict_int2e  <- setNames(
     c("Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat", "Jan", "Feb", "Mar",
@@ -28,6 +36,12 @@ int_dict <- function() {
   return(list(e2int = dict_e2int, int2e = dict_int2e))
 }
 
+#' Title
+#'
+#' @param ger_expr
+#'
+#' @return
+#' @export
 g2e <- function(ger_expr) {
   if (!exists("dict_g2e")) {
     # dictg_g2e <- dict()$g2e
@@ -46,9 +60,14 @@ g2e <- function(ger_expr) {
   return(res)
 }
 
+#' Title
+#'
+#' @param eng_expr
+#'
+#' @return
+#' @export
 e2g <- function(eng_expr) {
   if (!exists("dict_e2g")) {
-    # dictg_e2g <- dict()$e2g
     assign("dict_e2g", dict()$e2g, envir = .GlobalEnv)
   }
   res <- character(length(eng_expr))
@@ -63,6 +82,4 @@ e2g <- function(eng_expr) {
   }
   return(res)
 }
-
-
 

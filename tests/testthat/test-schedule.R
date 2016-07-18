@@ -89,6 +89,9 @@ context("update_schedule")
 test_that("test update_schedule", {
   # skip("At the moment...")
   # browser()
-  v <- update_schedule(origin_date, r_vehicles)
-
+  expect_equal(all(r_vehicles$update==0), T)
+  expect_equal(all(r_vehicles$shift_to_simdate==0), T)
+  r_vehicles <- update_schedule(origin_date, r_vehicles)
+  expect_equal(all(r_vehicles$update==2016), T)
+  expect_equal(all(r_vehicles$shift_to_simdate==366), T)
 })

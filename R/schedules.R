@@ -1,7 +1,7 @@
 # .............................................................................. Check tz = "GMT" everywhere
 #                                                                                mark benchmark tests as such...
 # Nach jetzigem wissen gibt es folgende Reihenfolgen was Schnelligkeit anbelangt: ... tbd
-# * %scheduled% slow, for everything
+# * %scheduled% "slow", for everything
 # * %sin% handles all "t in schedule"
 # * %fast_sin% only for "int_in...". Drawback: Needs int has to be converted to
 #      date to  check whether update is necessary.
@@ -20,26 +20,59 @@
 #' @param origin_date
 #'
 #' @return weekday as character. One of Sun < Mon < Tues < Wed < Thurs < Fri < Sat
-#'
-weekday <- function(t, origin_date = "2014-01-01 00:00:00", tz = "GMT") {
+#' @export
+weekday <- function(t, origin_date = "2014-01-01 00:00:00", tz = "GMT") { # dangerous with origin_date => wrong origin is taken?
   return(lubridate::wday(as.POSIXct(t, tz, origin_date), label = T, abbr = T))
 } # ... Check all arguments
 
+#' Title
+#'
+#' @param y
+#'
+#' @return
+#' @export
 first_day_of_year <- function(y) {
   return(lubridate::ymd_hms(paste0(y, "-01-01 00:00:00")))
 }
 
+#' Title
+#'
+#' @param date
+#' @param origin_date
+#'
+#' @return
+#' @export
 date2simtime <- function(date, origin_date) {
   return(as.numeric(date - origin_date, units = "secs"))
 }
 
+#' Title
+#'
+#' @param t
+#' @param origin_date
+#'
+#' @return
+#' @export
 simtime2date <- function(t, origin_date) { # as.date or just t + origin?
   return(origin_date + t)
 }
 
+#' Title
+#'
+#' @param object
+#'
+#' @return
+#' @export
 as.schedule <- function(object) {
-  # Could be used to add schedule to object
+  # Could be used to add class(schedule) to object
 } # ........................................ Not used
+
+#' Title
+#'
+#' @param object
+#'
+#' @return
+#' @export
 is.schedule <- function(object) {
   if (length(grepl("|", object)) == nrow(object) &
       length(grepl("--", object)) == nrow(object) &
@@ -59,7 +92,6 @@ is.schedule <- function(object) {
 #' @param ...
 #'
 #' @return
-#'
 gsub2 <- function(translation, x, ...) {
   for(i in names(translation)) {
     x <- gsub(i, translation[i], x, ...)
@@ -67,6 +99,12 @@ gsub2 <- function(translation, x, ...) {
   return(x)
 } # ................................. imsbasics
 
+#' Title
+#'
+#' @param schedule
+#'
+#' @return
+#' @export
 schedule_g2e <- function(schedule) {
   ints <- schedule::int_dict()
   dict <- schedule::dict()
@@ -81,7 +119,7 @@ schedule_g2e <- function(schedule) {
 #' @param vehicle
 #'
 #' @return labor
-#'
+#' @export
 as.labor.list <- function(missions, vehicle) {
   missions <- missions[missions$vehicle_id == vehicle$id, ]
   labor <- list(
@@ -96,6 +134,14 @@ as.labor.list <- function(missions, vehicle) {
   class(labor) <- c(class(labor), "labor")
   return(labor)
 }
+
+
+#' Title
+#'
+#' @param object
+#'
+#' @return
+#' @export
 is.labor.list <- function(object) {
   if (all(c("vehicle_id", "schedule", "labor", "productive", "idle", "overtime") %in%
           names(object)) &
@@ -106,7 +152,15 @@ is.labor.list <- function(object) {
   }
 }
 
+#' Title
+#'
+#' @param y
+#' @param date_df
+#' @param type
+#'
+#' @return
 calculate_shift_simdate <- function(y, date_df, type=stop("Argument from or to needed")) {
+  # date_df = data.frame(X1 = c("Jan-01", "Dec-31"))
   ints <- int_dict()
   if (type == "from") {
     i <- 1
@@ -125,7 +179,15 @@ calculate_shift_simdate <- function(y, date_df, type=stop("Argument from or to n
   return(lubridate::yday(paste(y, month, day, sep = "-")) - correct)
 }
 
+#' Title
+#'
+#' @param y
+#' @param time_df
+#' @param type
+#'
+#' @return
 calculate_shift_simtime <- function(y, time_df, type=stop("Argument from or to needed")) {
+  # time_df = data.frame(X1 = c("00:00", "24:00"))
   ints <- int_dict()
   if (type == "from") {
     i <- 1
@@ -148,7 +210,6 @@ calculate_shift_simtime <- function(y, time_df, type=stop("Argument from or to n
 #' @param interval
 #'
 #' @return array of intervals
-#'
 yearly_intervals <- function(interval) {
   start_date <- lubridate::int_start(interval)
   end_date <- lubridate::int_end(interval)
@@ -179,39 +240,35 @@ yearly_intervals <- function(interval) {
 #' @param schedule
 #'
 #' @return schedule
-#'
+#' @export
 update_schedule <- function(date, schedule) {
   y <- lubridate::year(date)
   if (schedule$update[1] != y) {
     assertthat::assert_that(all(c("update", "shift_from_simdate", "shift_to_simdate",
-                                  "shift_from_simtime", "shift_to_simtime", "shift_weekday", "schedule") %in% names(schedule)))
+                                  "shift_from_simtime", "shift_to_simtime",
+                                  "shift_weekday", "schedule") %in% names(schedule)))
+    assertthat::assert_that(assertthat::noNA(schedule$id))
+
     schedule$update <- rep(y, nrow(schedule))
     message(paste0("update_schedule: ", date, ", new year ", schedule$update[1]))
     df <- as.data.frame(strsplit(schedule$schedule, split = "|", fixed = T),
                         stringsAsFactors = F)
-    # browser()
-    assertthat::assert_that(assertthat::noNA(schedule$id))
+
     # Update dates
-    # date_df <- as.data.frame(strsplit(as.character(df[1, ]), split = "--", fixed = T),
-    #   stringsAsFactors = F)
     date_list <- strsplit(as.character(df[1, ]), split = "--", fixed = T)
     date_df <- as.data.frame(date_list, col.names = c(1:length(date_list)),
                              stringsAsFactors = F)
-    assertthat::assert_that(assertthat::noNA(schedule$id))
 
     schedule$shift_from_simdate <- calculate_shift_simdate(y, date_df, "from")
     schedule$shift_to_simdate <- calculate_shift_simdate(y, date_df, "to")
-    assertthat::assert_that(assertthat::noNA(schedule$id))
 
     # Update time
     time_df <- as.data.frame(strsplit(as.character(df[2, ]), split = "--", fixed = T),
                              stringsAsFactors = F)
     schedule$shift_from_simtime <- calculate_shift_simtime(y, time_df, "from")
     schedule$shift_to_simtime <- calculate_shift_simtime(y, time_df, "to")
-    assertthat::assert_that(assertthat::noNA(schedule$id))
 
     assign("schedule", schedule, envir = .GlobalEnv)
-    assertthat::assert_that(assertthat::noNA(schedule$id))
   } else {
     # Do nothing as schedule is already up to date.
   }
@@ -227,7 +284,6 @@ update_schedule <- function(date, schedule) {
 #' overtime? Depends on application
 #'
 #' @return labor
-#'
 calculate_daily_times <- function(labor, planned_times, idle2overtime = F) {
   library(lubridate) # needed for %within%
   # Check, that only one day is considered
@@ -302,7 +358,6 @@ calculate_daily_times <- function(labor, planned_times, idle2overtime = F) {
 #' @param vehicles
 #'
 #' @return T/F array
-#'
 int_in_sint <- function(t, vehicles) {
   return(vehicles$shift_from_simdate <= simTimeR::simDate(t) &
       vehicles$shift_to_simdate >= simTimeR::simDate(t) &
@@ -311,6 +366,12 @@ int_in_sint <- function(t, vehicles) {
       grepl(weekday(t), vehicles$shift_weekday))
 } # ................................... rule, vectorized!
 
+#' Title
+#'
+#' @param date
+#' @param vehicles
+#'
+#' @return
 posix_in_sint <- function(date, vehicles) {
   t <- date2simtime(date, origin_date)
   return(int_in_sint(t, vehicles))
@@ -324,6 +385,7 @@ posix_in_sint <- function(date, vehicles) {
 #' @param vehicles
 #'
 #' @return
+#' @export
 `%fast_sin%` <- function(t, vehicles) {
   mydate <- simtime2date(t, origin_date)
   if (lubridate::year(mydate) != vehicles$update[1]) {
@@ -346,6 +408,7 @@ posix_in_sint <- function(date, vehicles) {
 #' @export
 #'
 #' @examples
+#' @export
 `%sin%` <- function(t, vehicles) {
   if (class(t)[1] == "integer" | class(t)[1] == "numeric") {
     # Use %fast_sin% to check whether int is "in" schedule
@@ -368,9 +431,6 @@ posix_in_sint <- function(date, vehicles) {
 #' @param interval
 #'
 #' @return
-#' @export
-#'
-#' @examples
 sint_in_year_interval <- function(schedule, interval) {
   library(lubridate) # needed for %within%
   assertthat::assert_that(nrow(schedule) == 1)
@@ -422,7 +482,6 @@ sint_in_year_interval <- function(schedule, interval) {
 #' @param interval
 #'
 #' @return error
-#'
 sint_in_interval <- function(schedule, interval) {
   stop("In case of change in year, schedule needs to update. Use schar_in_interval")
 }
@@ -434,7 +493,6 @@ sint_in_interval <- function(schedule, interval) {
 #' @param interval
 #'
 #' @return intervals
-#'
 schar_in_interval <- function(schedule, interval) {
   start_date <- lubridate::floor_date(lubridate::int_start(interval), "day")
   end_date <- lubridate::floor_date(lubridate::int_end(interval), "day")
@@ -463,7 +521,6 @@ schar_in_interval <- function(schedule, interval) {
 #' @param schedule
 #'
 #' @return labor
-#'
 labor_in_year_schar <- function(labor, schedule) {
   assertthat::assert_that(all(class(labor) == c("list", "labor")))
   assertthat::assert_that(labor$vehicle_id == schedule$id)
@@ -507,7 +564,6 @@ labor_in_year_schar <- function(labor, schedule) {
 #' @param schedule
 #'
 #' @return labor
-#'
 labor_in_schar <- function(labor, schedule) {
   library(lubridate) # needed for %within%
   start_date <- min(lubridate::int_start(labor$labor))
@@ -567,20 +623,20 @@ labor_in_schar <- function(labor, schedule) {
 #' @param rhs
 #'
 #' @return According to the above cases: T/F, lubridate::intervals or labor
-#'
+#' @export
 `%scheduled%` <- function(lhs, rhs) {
   c_lhs <- as.character(class(lhs))
   c_rhs <- as.character(class(rhs))
-  if (all(c_lhs == c("POSIXct", "POSIXt")) & "schedule" %in% c_rhs) {
+  if ("POSIXct" %in% c_lhs & "schedule" %in% c_rhs) {
     # Datetime in schedule. Return T/F
     return(lhs %sin% rhs)
   } else if (all(c_lhs == "numeric") & "schedule" %in% c_rhs) {
     # integer time (seconds) in schedule. Return T/F
     return(lhs %sin% rhs)
-  } else if (all("schedule" %in% c_lhs) & all(c_rhs == "Interval")) {
+  } else if ("schedule" %in% c_lhs & all(c_rhs == "Interval")) {
     # schedule in interval. Return interval
     return(schar_in_interval(lhs, rhs))
-  } else if (all("labor" %in% c_lhs) & "schedule" %in% c_rhs) {
+  } else if ("labor" %in% c_lhs & "schedule" %in% c_rhs) {
     # labor in schedule. Return labor
     return(labor_in_schar(lhs, rhs))
   } else {

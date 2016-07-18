@@ -5,6 +5,7 @@
 #' @param datetime
 #'
 #' @return t A simDateTime
+#' @export
 as.simTime <- function(datetime) {
   datetime <- as.character(datetime)
   seconds <- 60*60*as.integer(strftime(datetime, "%H")) +
@@ -19,6 +20,7 @@ as.simTime <- function(datetime) {
 #' @param datetime
 #'
 #' @return t A simDate
+#' @export
 as.simDate <- function(datetime) {
   # warning("Implementation via POSIXct possible. See testthat")
   datetime <- as.character(datetime)
@@ -33,6 +35,7 @@ as.simDate <- function(datetime) {
 #' @param simTime
 #'
 #' @return charTime A char containing a time in the format HH:MM
+#' @export
 as.charTime <- function(simTime) { # ........................................... SQC zero_n
   # warning("Implementation via POSIXct possible. See testthat")
   h <- trunc(simTime/60/60)
@@ -48,6 +51,7 @@ as.charTime <- function(simTime) { # ...........................................
 #' @param t A simDateTime
 #'
 #' @return the day of year (0-364)
+#' @export
 simDate <- function(t) {
   # warning("Implementation via POSIXct possible. See testthat. ToDo vals 0, 365?")
   return(trunc(t/(24*60*60)))
@@ -59,6 +63,7 @@ simDate <- function(t) {
 #' @param t A simDateTime
 #'
 #' @return the actual time in seconds (0-(24*60*60-1))
+#' @export
 simTime <- function(t) {
   return(t %% (24*60*60)) # ..................... t_h <- strptime(t, "%Y-%m-%d") => t-t_h
 }
@@ -69,13 +74,9 @@ simTime <- function(t) {
 #' @param t A simDateTime
 #'
 #' @return the weekday in the format: "Mo, Di, Mi, Do, Fr, Sa, So"
+#' @export
 simWeekday <- function(t, order = c("Mi", "Do", "Fr", "Sa", "So", "Mo", "Di")) {
-  rep(order, length = 365)[simDate(t) + 1]
-  # Test alternative:
-  # german "Do" "Fr" "Sa" "So" "Mo" "Di" "Mi". Change using
-  # Sys.setlocale(category = "LC_ALL", locale = "English_United States.1252")
-  # weekdays(as.POSIXct(t, tz = "GMT", origin = "2014-01-01 00:00:00"), abbreviate = T)
-  # imsbasics::e2g(as.character(lubridate::wday(as.POSIXct(t, tz = "GMT", origin = "2014-01-01 00:00:00"), label = T, abbr = T))) # english Thurs Fri   Sat   Sun   Mon   Tues  Wed
+  return(rep(order, length = 365)[simDate(t) + 1])
 }
 
 #' Converts a DateTime to a simDateTime. Date + Time in seconds. Range 0- (365*24*60*60-1)
@@ -83,6 +84,7 @@ simWeekday <- function(t, order = c("Mi", "Do", "Fr", "Sa", "So", "Mo", "Di")) {
 #' @param datetime
 #'
 #' @return t A simDateTime
+#' @export
 as.simDateTime <- function(datetime) {
   # warning("Implementation via POSIXct possible. See testthat")
   seconds <- as.simDate(datetime)*24*60*60 + as.simTime(datetime)
@@ -96,7 +98,7 @@ as.simDateTime <- function(datetime) {
 #' @import data.table
 #'
 #' @return vehicles class sim_vehicles, a subset of sim_vehicles
-#'
+#' @export
 is_on_duty <- function(t, vehicles) { # ........................................ rule?
   return(vehicles$shift_from_simdate <= simTimeR::simDate(t) &
       vehicles$shift_to_simdate >= simTimeR::simDate(t) &
