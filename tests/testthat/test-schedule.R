@@ -1,11 +1,15 @@
 context("uuid-check for testdata")
 test_that("uuid of testdata didn't change", {
+  skip("Skip for development of tests")
+
   expect_equal(data$uuid, "ba6b7622-452d-11e6-8bc9-c94b5972ecfb")
   expect_equal(class(data$uuid), "character")
 })
 
 context("language and dictionary")
 test_that("language and dictionary", {
+  skip("Skip for development of tests")
+
   expect_equal(g2e("So"), "Sun")
     expect_equal(g2e(c("So", "Di")), c("Sun", "Tues"))
   expect_equal(var <- g2e(c("So, Mo, Mi", "Di, Mi, Do, Fr")),
@@ -19,10 +23,12 @@ test_that("language and dictionary", {
 
 context("test time/date in schedule")
 test_that("test time/date in schedule", {
+  skip("Skip for development of tests")
+
   expect_equal(as.character(weekday(test_sec, origin_date)), "Thurs")
   expect_equal(vehicles$shift_from_simdate, c(0,0,0))
   expect_equal(vehicles$shift_from_simtime, c(0,0,0))
-  # browser()
+  browser()
   vehicles <- update_schedule(test_date, vehicles)
   expect_equal(vehicles$shift_from_simdate, c(0, 0, 187))
   expect_equal(vehicles$shift_from_simtime, c(0, 43200, 32400))
@@ -37,6 +43,8 @@ test_that("test time/date in schedule", {
 
 context("test schedule in interval")
 test_that("test schedule in interval", {
+  skip("Skip for development of tests")
+
   expect_equal(length(yearly_intervals(test_interval1)), 4)
   expect_equal(as.character(class(yearly_intervals(test_interval1))), "Interval")
   expect_equal(length(yearly_intervals(test_interval2)), 3)
@@ -51,6 +59,7 @@ test_that("test schedule in interval", {
 
 context("test labor in schedule")
 test_that("test labor in schedule", {
+  skip("Skip for development of tests")
 
   expect_equal(length(labor1$labor), 3)
   expect_equal(labor1$overtime, NA)
@@ -70,6 +79,8 @@ test_that("test labor in schedule", {
 
 context("%scheduled%")
 test_that("test %scheduled%", {
+  skip("Skip for development of tests")
+
   expect_equal(test_date2 %scheduled% vehicles, c(T, F, F))
   expect_equal(date2simtime(test_date2, origin_date) %scheduled% vehicles, c(T, F, F))
 
@@ -87,8 +98,8 @@ test_that("test %scheduled%", {
 
 context("update_schedule")
 test_that("test update_schedule", {
-  # skip("At the moment...")
-  # browser()
+  skip("Skip for development of tests")
+
   expect_equal(all(r_vehicles$update==0), T)
   expect_equal(all(r_vehicles$shift_to_simdate==0), T)
   r_vehicles <- update_schedule(origin_date, r_vehicles)

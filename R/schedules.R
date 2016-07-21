@@ -21,7 +21,9 @@
 #'
 #' @return weekday as character. One of Sun < Mon < Tues < Wed < Thurs < Fri < Sat
 #' @export
-weekday <- function(t, origin_date = "2014-01-01 00:00:00", tz = "GMT") { # dangerous with origin_date => wrong origin is taken?
+weekday <- function(t, origin_date = "2014-01-01 00:00:00", tz = "GMT") { # ....... sim_wday
+  # dangerous with origin_date => wrong origin is taken?
+  # In case of performance problems: Memoize...
   return(lubridate::wday(as.POSIXct(t, tz, origin_date), label = T, abbr = T))
 } # ... Check all arguments
 
@@ -42,7 +44,7 @@ first_day_of_year <- function(y) {
 #'
 #' @return
 #' @export
-date2simtime <- function(date, origin_date) {
+date2simtime <- function(date, origin_date) { # date2sim_datetime
   return(as.numeric(date - origin_date, units = "secs"))
 }
 
@@ -127,7 +129,7 @@ as.labor.list <- function(missions, vehicle) {
     schedule = vehicle$schedule,
     labor = lubridate::interval(origin_date + missions$t_alarm_sec,
                                 origin_date + missions$t_alarm_sec + missions$dt_to_completion),
-    productive = NA,
+    productive = NA, # ......................................................... busy
     idle = NA,
     overtime = NA,
     stringsAsFactors = F)
@@ -292,11 +294,12 @@ calculate_daily_times <- function(labor, planned_times, idle2overtime = F) {
   remaining <- labor$labor[cond_same_day]
   cond_productive <- remaining %within% planned_times
   cond_overlap <- lubridate::int_overlaps(remaining, planned_times)
-  cond_split <- xor(cond_productive, cond_overlap)
+  cond_split <- xor(cond_productive, cond_overlap) # ........................... comment needed
 
   # Separate initial idle-possibility
   start_date_plan <- lubridate::int_start(planned_times)
   start_date_labor <- lubridate::int_start(remaining[1])
+  # Initialization needed to keep lubridate-class
   productive <- lubridate::interval(start_date_plan, start_date_plan)
   idle <- lubridate::interval(start_date_plan, start_date_plan)
   overtime <- lubridate::interval(start_date_plan, start_date_plan)
@@ -431,7 +434,7 @@ posix_in_sint <- function(date, vehicles) {
 #' @param interval
 #'
 #' @return
-sint_in_year_interval <- function(schedule, interval) {
+sint_in_year_interval <- function(schedule, interval) { # ...................... planned_labor_time can be any range - exeeding a year
   library(lubridate) # needed for %within%
   assertthat::assert_that(nrow(schedule) == 1)
   # Array containing all days in interval:
@@ -440,10 +443,10 @@ sint_in_year_interval <- function(schedule, interval) {
   assertthat::assert_that(lubridate::year(start_date) == lubridate::year(end_date - 0.001))
   all_days <- seq(from = start_date, to = end_date, by = "days")
 
-  # Filter days according to weekday, shift_from_simdate and shift_to_simdate
+  # Filter days according to weekday, shift_from_simdate and shift_to_simdate ..... filter_labordays
   c1 <- lubridate::wday(all_days, label = T, abbr = T) %in% unlist(strsplit(schedule$shift_weekday, split = ","))
-  c2 <- lubridate::yday(all_days) >= schedule$shift_from_simdate
-  c3 <- lubridate::yday(all_days) <= schedule$shift_to_simdate
+  c2 <- lubridate::yday(all_days) >= schedule$shift_from_simdate # ................ simdate
+  c3 <- lubridate::yday(all_days) <= schedule$shift_to_simdate # ................... simdate
   real_labor_days <- all_days[c1 & c2 & c3]
 
   # Set up array of time intervals including shift_from_simtime and shift_to_simtime
@@ -482,7 +485,7 @@ sint_in_year_interval <- function(schedule, interval) {
 #' @param interval
 #'
 #' @return error
-sint_in_interval <- function(schedule, interval) {
+sint_in_interval <- function(schedule, interval) { # .......................................... obsolet
   stop("In case of change in year, schedule needs to update. Use schar_in_interval")
 }
 
@@ -493,7 +496,7 @@ sint_in_interval <- function(schedule, interval) {
 #' @param interval
 #'
 #' @return intervals
-schar_in_interval <- function(schedule, interval) {
+schar_in_interval <- function(schedule, interval) { # ...................................... obsolet
   start_date <- lubridate::floor_date(lubridate::int_start(interval), "day")
   end_date <- lubridate::floor_date(lubridate::int_end(interval), "day")
   if (lubridate::year(start_date) == lubridate::year(end_date - 0.001)) {
@@ -521,7 +524,7 @@ schar_in_interval <- function(schedule, interval) {
 #' @param schedule
 #'
 #' @return labor
-labor_in_year_schar <- function(labor, schedule) {
+labor_in_year_schar <- function(labor, schedule) { # .......................... obsolet
   assertthat::assert_that(all(class(labor) == c("list", "labor")))
   assertthat::assert_that(labor$vehicle_id == schedule$id)
   # Ensure that you start with a clean labor (Do not mix years):
@@ -546,9 +549,9 @@ labor_in_year_schar <- function(labor, schedule) {
   productive <- lubridate::interval(start_date_plan, start_date_plan)
   idle <- lubridate::interval(start_date_plan, start_date_plan)
   overtime <- lubridate::interval(start_date_plan, start_date_plan)
-  for (i in 1:length(planned_times)) {
+  for (i in 1:length(planned_times)) { # ....................................... loop over wday?
     # Compare workload on a daily basis: labor = productive + idle + overtime
-    r <- calculate_daily_times(labor, planned_times[i], idle2overtime = F)
+    r <- calculate_daily_times(labor, planned_times[i], idle2overtime = F) # idle2overtime wichtig!
     idle <- c(idle, r$idle); productive <- c(productive, r$productive); overtime <- c(overtime, r$overtime); rm(r)
   }
   # Get rid of initialization. Ensure intervals to be unique
@@ -564,7 +567,7 @@ labor_in_year_schar <- function(labor, schedule) {
 #' @param schedule
 #'
 #' @return labor
-labor_in_schar <- function(labor, schedule) {
+labor_in_schar <- function(labor, schedule) { # Verwende Code aus _year_
   library(lubridate) # needed for %within%
   start_date <- min(lubridate::int_start(labor$labor))
   end_date <- max(lubridate::int_end(labor$labor))
