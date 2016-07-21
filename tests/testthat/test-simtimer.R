@@ -1,10 +1,10 @@
-context("uuid-check for testdata")
-test_that("uuid of testdata didn't change", {
-  # skip("Skip for development of tests")
-
-  expect_equal(data$uuid, "ba6b7622-452d-11e6-8bc9-c94b5972ecfb")
-  expect_equal(class(data$uuid), "character")
-})
+# context("uuid-check for testdata")
+# test_that("uuid of testdata didn't change", {
+#   # skip("Skip for development of tests")
+#
+#   expect_equal(data$uuid, "ba6b7622-452d-11e6-8bc9-c94b5972ecfb")
+#   expect_equal(class(data$uuid), "character")
+# })
 
 context("basic functions")
 test_that("sim_datetime works", {
@@ -17,12 +17,9 @@ test_that("sim_datetime works", {
 test_that("datetime works", {
   # skip("Skip for development of tests")
 
-  expect_equal(datetime(sim_datetime(t_20160101)),
-                        t_20160101)
-  expect_equal(datetime(sim_datetime(t_20160102)),
-                        t_20160102)
-  expect_equal(datetime(sim_datetime(t_20170101)),
-                        t_20170101)
+  expect_equal(datetime(sim_datetime(t_20160101)), t_20160101)
+  expect_equal(datetime(sim_datetime(t_20160102)), t_20160102)
+  expect_equal(datetime(sim_datetime(t_20170101)), t_20170101)
 })
 
 test_that("sim_date works", {

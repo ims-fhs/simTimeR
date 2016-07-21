@@ -48,7 +48,7 @@ sim_wday <- function(sim_datetime) {
 #' @export
 sim_datetime <- function(datetime) {
   seconds <- as.integer(as.numeric(datetime - origin_date, units="secs"))
-  # seconds <- sim_date(datetime)*24*60*60 + sim_time(datetime)
+  # seconds <- sim_date(datetime)*24*60*60 + sim_time(datetime) # does not work any more. Change? SCN
   return(seconds)
 }
 
