@@ -1,9 +1,9 @@
-Package: schedule
+Package: simtimer
 Type: Package
 Title: Package to handle schedules including datetimes as integers
         (called simdatetimes) for the smooth handling insiede
         simulations
-Version: 2.0.13
+Version: 2.0.14
 Date: 2016-07-21
 Author: Adrian Schmid, Christoph Strauss
 Maintainer: Adrian Schmid <adrian.schmid@fhsg.ch>
