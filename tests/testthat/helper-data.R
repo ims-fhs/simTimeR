@@ -10,8 +10,13 @@ r_vehicles <- data$hist_vehicles # .............................................
 class(r_vehicles) <- c("data.frame", "schedule")
 
 origin_date = lubridate::ymd_hms("2016-01-01 00:00:00")
-test_date <- lubridate::ymd_hms("2016-06-16 14:16:53 CEST") # => "Thurs"
-test_date2 <- lubridate::ymd_hms("2016-06-16 23:59:59 CEST") # => "Thurs"
+t_20160101 <- lubridate::ymd_hms("2016-01-01 00:00:00") # = origin_date!
+t_20160102 <- lubridate::ymd_hms("2016-01-02 00:00:00")
+t_20170101 <- lubridate::ymd_hms("2017-01-01 00:00:00")
+
+test_date <- lubridate::ymd_hms("2016-06-16 14:16:53") # => "Thurs"
+test_date2 <- lubridate::ymd_hms("2016-06-16 23:59:59
+                                 ") # => "Thurs"
 test_sec <- date2simtime(test_date, origin_date)
 
 test_interval2015 <- lubridate::interval(lubridate::ymd_hms("2015-01-01 00:00:00"),
