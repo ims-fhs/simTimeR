@@ -1,21 +1,15 @@
 Package: simtimer
 Type: Package
-Title: Package to handle schedules including datetimes as integers
-        (called simdatetimes) for the smooth handling insiede
-        simulations
-Version: 2.0.14
-Date: 2016-07-21
+Title: datetimes as integers for simulations
+Version: 2.0.15
+Date: 2016-08-09
 Author: Adrian Schmid, Christoph Strauss
 Maintainer: Adrian Schmid <adrian.schmid@fhsg.ch>
-Description: schedule provides functions to coerce datetimes to integer
-        numbers (called simdatetime). The integer number represents
-        seconds starting from 01.01.2014, 00:00:00. Also provides
-        functions to access only the day of a simdatetime (as integer
-        between 0 and 364) or only the time of a simdatetime (as
-        integer between 0 and 24*60*60-1) or only the weekday as string
-        (Mon, Tues, Wed, Thurs, Fri, Sat, Sun)
+Description: simtimer handles datetimes as integers (called
+        sim_datetimes) for the usage inside simulations.
 License: GPL (>= 2) just like R itself.
 LazyData: TRUE
 Suggests: testthat
-URL: http://github.com/symbolrush/simTimeR
+Depends: lubridate
+URL: http://github.com/ims-fhs/simtimer
 RoxygenNote: 5.0.1
