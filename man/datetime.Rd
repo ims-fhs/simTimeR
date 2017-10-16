@@ -7,11 +7,15 @@
 datetime(sim_datetime)
 }
 \arguments{
-\item{sim_datetime}{}
+\item{sim_datetime}{A sim_datetime}
 }
 \value{
 datetime A POSIXct date-time
 }
 \description{
 Converts a sim_datetime to a datetime.
+}
+\examples{
+datetime(sim_datetime(lubridate::ymd_hms("2016-01-02 00:00:00")))
+# [1] "2016-01-02 UTC"
 }

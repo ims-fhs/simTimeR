@@ -15,3 +15,10 @@ the day of the period (> 0, in many cases also < 365)
 \description{
 Return day of year from rel. time in seconds.
 }
+\examples{
+origin_date <- lubridate::ymd_hms("2016-01-01 00:00:00")
+sim_date(sim_datetime(lubridate::ymd_hms("2016-01-01 00:01:00")))
+# [1] 0
+sim_date(sim_datetime(lubridate::ymd_hms("2016-01-02 00:01:00")))
+# [1] 1
+}

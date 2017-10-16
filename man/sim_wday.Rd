@@ -15,3 +15,8 @@ the weekday in the format: "Mo, Di, Mi, Do, Fr, Sa, So"
 \description{
 Weekday of a sim_datetime
 }
+\examples{
+origin_date <- lubridate::ymd_hms("2016-01-01 00:00:00")
+sim_wday(sim_datetime(lubridate::ymd_hms("2016-01-01 00:01:00")))
+# [1] "Fri"
+}

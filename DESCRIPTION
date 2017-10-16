@@ -1,15 +1,15 @@
 Package: simtimer
 Type: Package
 Title: datetimes as integers for simulations
-Version: 2.0.16
-Date: 2017-08-08
-Author: Adrian Schmid, Christoph Strauss
-Maintainer: Adrian Schmid <adrian.schmid@fhsg.ch>
+Version: 2.0.17
+Date: 2017-10-16
+Author: Adrian Staempfli, Christoph Strauss
+Maintainer: Adrian Staempfli <adrian.staempfli@fhsg.ch>
 Description: simtimer handles datetimes as integers (called
         sim_datetimes) for the usage inside simulations.
-License: GPL (>= 2) just like R itself.
+License: GPL-3
 LazyData: TRUE
 Suggests: testthat
-Depends: lubridate
+Imports: lubridate
 URL: http://github.com/ims-fhs/simtimer
 RoxygenNote: 6.0.1

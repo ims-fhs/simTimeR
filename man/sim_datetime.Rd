@@ -15,3 +15,10 @@ sim_datetime A sim_datetime
 \description{
 Converts a datetime to a sim_datetime.
 }
+\examples{
+origin_date <- lubridate::ymd_hms("2016-01-01 00:00:00")
+sim_datetime(lubridate::ymd_hms("2016-01-01 00:01:00"))
+# [1] 60
+sim_datetime(lubridate::ymd_hms("2016-01-02 00:01:00"))
+# [1] 86460
+}

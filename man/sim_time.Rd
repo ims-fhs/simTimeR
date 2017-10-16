@@ -15,3 +15,10 @@ the actual day-time in seconds (0-(24*60*60-1))
 \description{
 Day-time part of a sim_datetime
 }
+\examples{
+origin_date <- lubridate::ymd_hms("2016-01-01 00:00:00")
+sim_time(sim_datetime(lubridate::ymd_hms("2016-01-01 00:01:00")))
+# [1] 60
+sim_time(sim_datetime(lubridate::ymd_hms("2016-01-02 00:01:00")))
+# [1] 60
+}

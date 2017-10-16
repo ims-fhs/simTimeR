@@ -13,6 +13,11 @@
 #'
 #' @return the day of the period (> 0, in many cases also < 365)
 #' @export
+#' @examples origin_date <- lubridate::ymd_hms("2016-01-01 00:00:00")
+#' sim_date(sim_datetime(lubridate::ymd_hms("2016-01-01 00:01:00")))
+#' # [1] 0
+#' sim_date(sim_datetime(lubridate::ymd_hms("2016-01-02 00:01:00")))
+#' # [1] 1
 sim_date <- function(sim_datetime) {
   return(trunc(sim_datetime/(24*60*60)))
 }
@@ -23,6 +28,11 @@ sim_date <- function(sim_datetime) {
 #'
 #' @return the actual day-time in seconds (0-(24*60*60-1))
 #' @export
+#' @examples origin_date <- lubridate::ymd_hms("2016-01-01 00:00:00")
+#' sim_time(sim_datetime(lubridate::ymd_hms("2016-01-01 00:01:00")))
+#' # [1] 60
+#' sim_time(sim_datetime(lubridate::ymd_hms("2016-01-02 00:01:00")))
+#' # [1] 60
 sim_time <- function(sim_datetime) {
   return(sim_datetime %% (24*60*60))
 }
@@ -33,6 +43,9 @@ sim_time <- function(sim_datetime) {
 #'
 #' @return the weekday in the format: "Mo, Di, Mi, Do, Fr, Sa, So"
 #' @export
+#' @examples origin_date <- lubridate::ymd_hms("2016-01-01 00:00:00")
+#' sim_wday(sim_datetime(lubridate::ymd_hms("2016-01-01 00:01:00")))
+#' # [1] "Fri"
 sim_wday <- function(sim_datetime) {
   # tz = "GMT" not considered at the moment. In case of performance problems: Memoize.
   wday <- lubridate::wday(as.POSIXct(sim_datetime, origin = origin_date),
@@ -46,18 +59,26 @@ sim_wday <- function(sim_datetime) {
 #'
 #' @return sim_datetime A sim_datetime
 #' @export
+#'
+#' @examples origin_date <- lubridate::ymd_hms("2016-01-01 00:00:00")
+#' sim_datetime(lubridate::ymd_hms("2016-01-01 00:01:00"))
+#' # [1] 60
+#' sim_datetime(lubridate::ymd_hms("2016-01-02 00:01:00"))
+#' # [1] 86460
 sim_datetime <- function(datetime) {
-  seconds <- as.integer(as.numeric(datetime - origin_date, units="secs"))
+  seconds <- as.integer(as.numeric(datetime - origin_date, units = "secs"))
   # seconds <- sim_date(datetime)*24*60*60 + sim_time(datetime) # does not work any more. Change? SCN
   return(seconds)
 }
 
 #' Converts a sim_datetime to a datetime.
 #'
-#' @param sim_datetime
+#' @param sim_datetime A sim_datetime
 #'
 #' @return datetime A POSIXct date-time
 #' @export
+#' @examples datetime(sim_datetime(lubridate::ymd_hms("2016-01-02 00:00:00")))
+#' # [1] "2016-01-02 UTC"
 datetime <- function(sim_datetime) {
   datetime <- origin_date + sim_datetime
   return(datetime)

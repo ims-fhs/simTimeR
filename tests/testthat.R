@@ -1,5 +1,5 @@
 library(testthat)
-library(simTimeR)
-library(lubridate)
+library(simtimer)
 
-test_check("simTimeR")
+source("testthat/helper-data.R")
+test_check("simtimer")
