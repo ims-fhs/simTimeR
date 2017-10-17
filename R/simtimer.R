@@ -77,7 +77,8 @@ sim_datetime <- function(datetime) {
 #'
 #' @return datetime A POSIXct date-time
 #' @export
-#' @examples datetime(sim_datetime(lubridate::ymd_hms("2016-01-02 00:00:00")))
+#' @examples origin_date <- lubridate::ymd_hms("2016-01-01 00:00:00")
+#' datetime(sim_datetime(lubridate::ymd_hms("2016-01-02 00:00:00")))
 #' # [1] "2016-01-02 UTC"
 datetime <- function(sim_datetime) {
   datetime <- origin_date + sim_datetime
