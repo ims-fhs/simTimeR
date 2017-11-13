@@ -1,8 +1,8 @@
 Package: simtimer
 Type: Package
 Title: datetimes as integers for simulations
-Version: 2.0.18
-Date: 2017-10-17
+Version: 2.0.19
+Date: 2017-11-13
 Author: Adrian Staempfli, Christoph Strauss
 Maintainer: Adrian Staempfli <adrian.staempfli@fhsg.ch>
 Description: simtimer handles datetimes as integers (called
@@ -10,6 +10,6 @@ Description: simtimer handles datetimes as integers (called
 License: GPL-3
 LazyData: TRUE
 Suggests: testthat
-Imports: lubridate
+Imports: lubridate (== 1.6.0)
 URL: http://github.com/ims-fhs/simtimer
 RoxygenNote: 6.0.1
