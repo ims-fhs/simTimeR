@@ -1,0 +1,99 @@
+---
+title: "simtimer"
+author: "Michael Schmnid, IMS-FHS"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE, message=FALSE, results='hide'}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(message = FALSE)
+# knitr::opts_chunk$set(results = 'hide')
+```
+
+<!-- Code for adding footnotes: footnotes^[This is a footnote.] -->
+
+Simtimer is an R package that makes it easier to work with dates and times on a relative 
+timescale referring to an `origin_date` by choice. It is based on the lubridate package. 
+  
+The applications of simtimer are tasks (i.e. simulation) including a timerange of several 
+minutes to years. For such problems, the time dimension might preferably be represented as a relative timescale
+(integer) than a series of `date-time` objects (POSIXt). Simtimer is an basic tool
+to transform `date-times` to a relative timescale in seconds (`sim_datetime`) and vice versa. Additionally
+simtimer allows to extract elements of a `sim_datetime` such as second, weekday and day.  
+
+```{r, echo = F, out.width = "690px"}
+knitr::include_graphics("comparison_simtimer_vs_regular_time.png")
+```
+
+
+## Basic transformation
+
+For the transofrmation into the relative timescale (`date-time` -> `sim_datetime`) use the 
+corresponding function `sim_datetime()`. This function expects an `origin_date` of 
+choice to be predefined. This `origin_date` should be earlier in time than the remaining 
+`date-time`-elements.
+
+```{r}
+library(simtimer)
+origin_date <- lubridate::ymd_hms("2017-01-01 00:00:00", tz = "UTC")
+my_datetime <- c(lubridate::ymd_hms("2017-01-01 02:00:00", tz = "UTC"), 
+                 lubridate::ymd_hms("2017-02-27 20:53:20", tz = "UTC"),
+                 lubridate::ymd_hms("2017-08-20 11:33:20", tz = "UTC"),
+                 lubridate::ymd_hms("2018-01-06 08:53:20", tz = "UTC"))
+my_sim_datetime <- sim_datetime(my_datetime)
+my_sim_datetime
+class(my_sim_datetime)
+```
+
+All remaining functions of simtimer take a `sim_datetime` as an argument.  
+
+For the opposite transformation (`sim_datetime` -> `date-time`) use the corresponding function
+`datetime()`. As the `origin_date` is defined globally, it doesn't need to be defined
+anymore. The expectation here is that the `origin_date` won't change during your calculations.
+
+```{r}
+datetime(my_sim_datetime)
+```
+
+
+## Extracting the second (of a day)
+
+Similar to `lubridate::second()` you can extract the second of a `sim_datetime` elemet by using 
+the function `sim_time()`. It returns how many seconds have past since the last "beginning of
+a day" depending on the time-part of your `origin_date` ("00:00:00" is recommended).
+```{r}
+sim_time(my_sim_datetime)
+```
+
+
+## Extracting the weekday
+
+Similar to `lubridate::wday()` you can extract the weekday of a `sim_datetime` elemet by using 
+the function `sim_wday()`. It returns the actual weekday of your `sim_datetime`.
+```{r}
+sim_wday(my_sim_datetime)
+```
+
+
+## Extracting the day (since `origin_date`)
+
+In order to count the days that have passed since the beginning (your `origin_date`) use 
+`sim_date()`. To be more precise - the function returns the number of `24*60*60`-intervals 
+that have passed since your `origin_date`.   
+
+```{r}
+sim_date(my_sim_datetime)
+```
+
+
+
+
+
+
+
+
