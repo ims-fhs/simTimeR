@@ -41,17 +41,16 @@ my_datetime <- c(lubridate::ymd_hms("2017-01-01 02:00:00", tz = "UTC"),
                  lubridate::ymd_hms("2017-02-27 20:53:20", tz = "UTC"),
                  lubridate::ymd_hms("2017-08-20 11:33:20", tz = "UTC"),
                  lubridate::ymd_hms("2018-01-06 08:53:20", tz = "UTC"))
-my_sim_datetime <- sim_datetime(my_datetime)
+my_sim_datetime <- sim_datetime(my_datetime, origin_date)
 my_sim_datetime
 class(my_sim_datetime)
 ```
 
 All remaining functions of simtimer take a `sim_datetime` as argument.  
 
-For the opposite transformation (`sim_datetime` -> `date_time`) use the corresponding function `datetime()`. As the `origin_date` is defined globally, it doesn't need to be defined anymore. The expectation here is that the `origin_date` won't change during your calculations.
-
+For the opposite transformation (`sim_datetime` -> `date_time`) use the corresponding function `datetime()` with the same `origin_date`.
 ```{r}
-datetime(my_sim_datetime)
+datetime(my_sim_datetime, origin_date)
 ```
 
 
@@ -67,7 +66,7 @@ sim_time(my_sim_datetime)
 
 Similar to `lubridate::wday()` you can extract the weekday of a `sim_datetime` elemet by using the function `sim_wday()`. It returns the actual weekday of your `sim_datetime`.
 ```{r}
-sim_wday(my_sim_datetime)
+sim_wday(my_sim_datetime, origin_date)
 ```
 
 

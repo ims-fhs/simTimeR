@@ -4,10 +4,12 @@
 \alias{sim_wday}
 \title{Weekday of a sim_datetime}
 \usage{
-sim_wday(sim_datetime)
+sim_wday(sim_datetime, origin_date)
 }
 \arguments{
 \item{sim_datetime}{A sim_datetime}
+
+\item{origin_date}{A datetime}
 }
 \value{
 the weekday in the format: "Mo, Di, Mi, Do, Fr, Sa, So"
@@ -17,6 +19,6 @@ Weekday of a sim_datetime
 }
 \examples{
 origin_date <- lubridate::ymd_hms("2016-01-01 00:00:00")
-sim_wday(sim_datetime(lubridate::ymd_hms("2016-01-01 00:01:00")))
+sim_wday(sim_datetime(lubridate::ymd_hms("2016-01-01 00:01:00"), origin_date), origin_date)
 # [1] "Fri"
 }

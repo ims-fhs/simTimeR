@@ -4,10 +4,12 @@
 \alias{datetime}
 \title{Converts a sim_datetime to a datetime.}
 \usage{
-datetime(sim_datetime)
+datetime(sim_datetime, origin_date)
 }
 \arguments{
 \item{sim_datetime}{A sim_datetime}
+
+\item{origin_date}{A datetime}
 }
 \value{
 datetime A POSIXct date-time
@@ -17,6 +19,6 @@ Converts a sim_datetime to a datetime.
 }
 \examples{
 origin_date <- lubridate::ymd_hms("2016-01-01 00:00:00")
-datetime(sim_datetime(lubridate::ymd_hms("2016-01-02 00:00:00")))
+datetime(sim_datetime(lubridate::ymd_hms("2016-01-02 00:00:00"), origin_date), origin_date)
 # [1] "2016-01-02 UTC"
 }

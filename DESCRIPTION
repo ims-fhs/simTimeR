@@ -1,8 +1,8 @@
 Package: simtimer
 Type: Package
 Title: datetimes as integers for simulations
-Version: 2.0.22
-Date: 2017-12-04
+Version: 2.0.23
+Date: 2017-12-05
 Author: Adrian Staempfli, Christoph Strauss, Michael Schmid
 Maintainer: Adrian Staempfli <adrian.staempfli@fhsg.ch>
 Description: simtimer handles datetimes as integers (called
