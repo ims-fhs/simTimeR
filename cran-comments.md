@@ -1,48 +1,14 @@
-cran-comments
-================
-Michael Schmid
-4 Dezember 2017
+## cran-comments
+Adrian Staempfli, Christoph Strauss, Michael Schmid  
+05 December 2017
 
-R Markdown
-----------
+#### Test enviroments
+* local operating system, Windows 10, R version 3.4.2 (2017-09-28)
+* ... more? --> Unix, Mac, ...
+* ...
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+#### R CMD check results
+There were no ERRORs or WARNINGs or NOTEs
+This is the first submission of this package
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-``` r
-summary(cars)
-```
-
-    ##      speed           dist       
-    ##  Min.   : 4.0   Min.   :  2.00  
-    ##  1st Qu.:12.0   1st Qu.: 26.00  
-    ##  Median :15.0   Median : 36.00  
-    ##  Mean   :15.4   Mean   : 42.98  
-    ##  3rd Qu.:19.0   3rd Qu.: 56.00  
-    ##  Max.   :25.0   Max.   :120.00
-
-Including Plots
----------------
-
-### new title
-
-You can also embed plots, for example:
-
-![](cran-comments_files/figure-markdown_github-ascii_identifiers/pressure-1.png)
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
-
-1
-=
-
-2
--
-
-### 3
-
-#### 4
-
-##### 5
-
-###### 6
+#### Downstream dependencies
