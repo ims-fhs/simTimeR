@@ -16,7 +16,7 @@
 
 |package  |*  |version |date       |source                      |
 |:--------|:--|:-------|:----------|:---------------------------|
-|simtimer |*  |3.0.0   |2017-12-14 |local (ims-fhs/simtimer@NA) |
+|simtimer |*  |3.0.1   |2017-12-14 |local (ims-fhs/simtimer@NA) |
 
 # Check results
 

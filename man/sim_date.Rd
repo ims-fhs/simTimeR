@@ -2,23 +2,29 @@
 % Please edit documentation in R/simtimer.R
 \name{sim_date}
 \alias{sim_date}
-\title{Return day of year from rel. time in seconds.}
+\title{Days that have passed in sim_datetime}
 \usage{
 sim_date(sim_datetime)
 }
 \arguments{
-\item{sim_datetime}{A sim_datetime}
+\item{sim_datetime}{A sim_datetime (integer representing the passed seconds since origin_date)}
 }
 \value{
-the day of the period (> 0, in many cases also < 365)
+the number of days (24h-intervals) that have passed since origin_date
 }
 \description{
-Return day of year from rel. time in seconds.
+sim_date() calculates the number of 24h-intervals that have passed since origin_date. If the
+origin_date of sim_datetime has a time component different than 00:00:00, the 24h-intervals
+are correlated to this particular time component.
 }
 \examples{
-origin_date <- lubridate::ymd_hms("2016-01-01 00:00:00")
-sim_date(sim_datetime(lubridate::ymd_hms("2016-01-01 00:01:00"), origin_date))
+sim_date(24*60*60-1)
 # [1] 0
+sim_date(24*60*60)
+# [1] 1
+sim_date(452*24*60*60)
+# [1] 452
+origin_date <- lubridate::ymd_hms("2016-01-01 00:00:00")
 sim_date(sim_datetime(lubridate::ymd_hms("2016-01-02 00:01:00"), origin_date))
 # [1] 1
 }

@@ -2,23 +2,27 @@
 % Please edit documentation in R/simtimer.R
 \name{datetime}
 \alias{datetime}
-\title{Converts a sim_datetime to a datetime.}
+\title{Back-transformation from a sim_datetime to a datetime}
 \usage{
 datetime(sim_datetime, origin_date)
 }
 \arguments{
-\item{sim_datetime}{A sim_datetime}
+\item{sim_datetime}{A sim_datetime (integer representing the passed seconds since origin_date)}
 
-\item{origin_date}{A datetime}
+\item{origin_date}{A datetime (POSIXt)}
 }
 \value{
-datetime A POSIXct date-time
+datetime A POSIXct
 }
 \description{
-Converts a sim_datetime to a datetime.
+datetime() transforms a sim_datetime element (integer) to a regular datetime element (POSIXt)
 }
 \examples{
 origin_date <- lubridate::ymd_hms("2016-01-01 00:00:00")
+datetime(60, origin_date)
+# [1] "2016-01-01 00:01:00 UTC"
+datetime(600, origin_date)
+# [1] "2016-01-01 00:10:00 UTC"
 datetime(sim_datetime(lubridate::ymd_hms("2016-01-02 00:00:00"), origin_date), origin_date)
 # [1] "2016-01-02 UTC"
 }
