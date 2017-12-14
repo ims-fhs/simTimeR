@@ -1,14 +1,15 @@
-## cran-comments
-Adrian Staempfli, Christoph Strauss, Michael Schmid  
-05 December 2017
+## Test environments
+* local operating system, Windows 10, R version 3.4.2
+* local operating system, Mac OS, ... (Adrian ..?!)
 
-#### Test enviroments
-* local operating system, Windows 10, R version 3.4.2 (2017-09-28)
-* ... more? --> Unix, Mac, ...
-* ...
+## R CMD check results
 
-#### R CMD check results
-There were no ERRORs or WARNINGs or NOTEs
-This is the first submission of this package
+0 errors | 0 warnings | 1 note
 
-#### Downstream dependencies
+* This is a new release.
+
+## Reverse dependencies
+
+This is a new release, so there are no reverse dependencies.
+
+---

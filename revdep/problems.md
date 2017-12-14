@@ -10,13 +10,13 @@
 |language |(EN)                         |
 |collate  |German_Switzerland.1252      |
 |tz       |Europe/Berlin                |
-|date     |2017-12-05                   |
+|date     |2017-12-14                   |
 
 ## Packages
 
 |package  |*  |version |date       |source                      |
 |:--------|:--|:-------|:----------|:---------------------------|
-|simtimer |*  |2.0.24  |2017-12-05 |local (ims-fhs/simtimer@NA) |
+|simtimer |*  |3.0.0   |2017-12-14 |local (ims-fhs/simtimer@NA) |
 
 # Check results
 
