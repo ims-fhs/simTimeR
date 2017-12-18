@@ -21,9 +21,9 @@ simtimer in a little R package designed to simplify (and speeding up) calculatin
 
 Discrete event simulations is a simulation paradigm that is based on the evaluation of events taking place in a time-specific order. Therefore a discrete event simulation calculates many time intervals. simtimer handles dates and times as integers. This makes working with time intervals as easy (and as fast) as subtracting integers.
 
-simtimer uses an `origin_date` and calculates all dates and times referring to that `origin_date`. simtimer is based on the lubridate package. 
+simtimer uses an `origin_date` and calculates all dates and times referring to that `origin_date`. 
   
-The applications of simtimer are discrete event simulations representing a timerange of several minutes to years. For such problems, the time dimension might preferably be represented as a relative timescale (integer) than a series of `date_time` objects (POSIXt). simtimer is a basic tool to transform `date_times` to a relative timescale in seconds (`sim_datetime`) and vice versa. Additionally simtimer allows to extract elements of a `sim_datetime` such as time, weekday and day.  
+The applications of simtimer are discrete event simulations representing a timerange of several minutes to years. For such problems, the time dimension might preferably be represented as a relative timescale (integer) than a series of `date_time` objects (POSIXt). simtimer is a basic tool to transform `date_times` to a relative timescale in seconds (`sim_datetime`) and vice versa. Additionally simtimer allows to extract elements of a `sim_datetime` such as time, weekday and date.  
 
 ```{r, echo = F, out.width = "690px"}
 knitr::include_graphics("comparison_simtimer_vs_regular_time.png")
@@ -32,7 +32,7 @@ knitr::include_graphics("comparison_simtimer_vs_regular_time.png")
 
 ## Basic transformation
 
-For the transofrmation into the relative timescale (`date_time` -> `sim_datetime`) use the corresponding function `sim_datetime()`. This function expects an `origin_date` of choice to be predefined. This `origin_date` should be earlier in time than the following `date_time`-elements.
+For the transformation into the relative timescale (`date_time` -> `sim_datetime`) use the corresponding function `sim_datetime()`. This function expects an `origin_date` of choice to be predefined. This `origin_date` should be earlier in time than the following `date_time`-elements.
 
 ```{r}
 library(simtimer)
@@ -56,7 +56,7 @@ datetime(my_sim_datetime, origin_date)
 
 ## Extracting the time (in seconds)
 
-Similar to `lubridate::second()` you can extract the second of a `sim_datetime` element by using the function `sim_time()`. It returns how many seconds have past since the last "beginning of a day" depending on the time-part of your `origin_date` ("00:00:00" is recommended).
+You can extract the time (in seconds) of a `sim_datetime` element by using the function `sim_time()`. It returns how many seconds have past since the last "beginning of a day" depending on the time-part of your `origin_date` ("00:00:00" is recommended).
 ```{r}
 sim_time(my_sim_datetime)
 ```
@@ -64,13 +64,13 @@ sim_time(my_sim_datetime)
 
 ## Extracting the weekday
 
-Similar to `lubridate::wday()` you can extract the weekday of a `sim_datetime` elemet by using the function `sim_wday()`. It returns the actual weekday of your `sim_datetime`.
+You can extract the weekday of a `sim_datetime` elemet by using the function `sim_wday()`. It returns the weekday of your `sim_datetime`.
 ```{r}
 sim_wday(my_sim_datetime, origin_date)
 ```
 
 
-## Extracting the day (since `origin_date`)
+## Extracting the date
 
 In order to count the days that have passed since the beginning (your `origin_date`) use 
 `sim_date()`. To be more precise - the function returns the number of `24*60*60`-intervals 

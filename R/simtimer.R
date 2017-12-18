@@ -5,7 +5,7 @@
 #
 # origin_date needs day-time 00:00:00. Otherwise simtimer leads to wrong results.
 # tz will be ignored at the moment.
-# datetime is always POSIXct date-time.
+# datetime is always a POSIXt date-time.
 
 
 
@@ -69,16 +69,16 @@ sim_time <- function(sim_datetime) {
 #' @param sim_datetime A sim_datetime (integer representing the passed seconds since origin_date)
 #' @param origin_date A datetime (POSIXt)
 #'
-#' @return the abbreviated weekday
+#' @return the abbreviated weekday (depending on your Sys.getlocale())
 #' @export
 #' @examples
 #' origin_date <- lubridate::ymd_hms("2016-01-01 00:00:00")
 #' sim_wday(60, origin_date)
-#' # [1] "Fri" # Depends on your Systems Language
+#' # [1] "Fri" # depending on your Sys.getlocale()
 #' sim_wday(sim_datetime(lubridate::ymd_hms("2016-01-01 00:01:00"), origin_date), origin_date)
-#' # [1] "Fri" # Depends on your Systems Language
+#' # [1] "Fri" # depending on your Sys.getlocale()
 #' sim_wday(sim_datetime(lubridate::ymd_hms("2016-01-02 00:01:00"), origin_date), origin_date)
-#' # [1] "Sat" # Depends on your Systems Language
+#' # [1] "Sat" # depending on your Sys.getlocale()
 sim_wday <- function(sim_datetime, origin_date) {
   return(as.character(weekdays(origin_date + sim_datetime, abbreviate = TRUE)))
 }
@@ -86,6 +86,7 @@ sim_wday <- function(sim_datetime, origin_date) {
 #' Transformation from a datetime to a sim_datetime
 #'
 #' sim_datetime() transforms a regular datetime element (POSIXt) to a sim_datetime element (integer)
+#' timezone (tz) will be ignored at the moment. Therefore tz of datetime and origin_date should be identical.
 #'
 #' @param datetime A datetime (POSIXt)
 #' @param origin_date A datetime (POSIXt)
@@ -110,7 +111,7 @@ sim_datetime <- function(datetime, origin_date) {
 #' @param sim_datetime A sim_datetime (integer representing the passed seconds since origin_date)
 #' @param origin_date A datetime (POSIXt)
 #'
-#' @return datetime A POSIXct
+#' @return datetime A POSIXt
 #' @export
 #' @examples
 #' origin_date <- lubridate::ymd_hms("2016-01-01 00:00:00")
