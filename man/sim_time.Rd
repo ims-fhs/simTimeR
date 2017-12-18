@@ -2,7 +2,7 @@
 % Please edit documentation in R/simtimer.R
 \name{sim_time}
 \alias{sim_time}
-\title{Day-time part of a sim_datetime}
+\title{Time part of a sim_datetime}
 \usage{
 sim_time(sim_datetime)
 }
@@ -10,10 +10,10 @@ sim_time(sim_datetime)
 \item{sim_datetime}{A sim_datetime (integer representing the passed seconds since origin_date)}
 }
 \value{
-the actual day-time in seconds (0-(24*60*60-1))
+time in seconds (Range: 0-(24*60*60-1))
 }
 \description{
-sim_time() calculates the number of seconds that have passed since the beginning of a day.
+sim_time() returns the time of a sim_datetime in seconds.
 The beginning of a day is defined by the time component of origin_date which defines the
 parameter sim_datetime.
 }

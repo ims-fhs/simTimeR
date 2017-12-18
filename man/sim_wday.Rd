@@ -15,13 +15,15 @@ sim_wday(sim_datetime, origin_date)
 the abbreviated weekday
 }
 \description{
-sim_wday() gives the weekday of a sim_datetime. It's crucial to use the same origin_date for
+sim_wday() returns the weekday of a sim_datetime. It's crucial to use the same origin_date for
 sim_wday() than the origin_date that was used to generate the sim_datetime
 }
 \examples{
 origin_date <- lubridate::ymd_hms("2016-01-01 00:00:00")
+sim_wday(60, origin_date)
+# [1] "Fri" # Depends on your Systems Language
 sim_wday(sim_datetime(lubridate::ymd_hms("2016-01-01 00:01:00"), origin_date), origin_date)
-# [1] "Fri"
+# [1] "Fri" # Depends on your Systems Language
 sim_wday(sim_datetime(lubridate::ymd_hms("2016-01-02 00:01:00"), origin_date), origin_date)
-# [1] "Sat"
+# [1] "Sat" # Depends on your Systems Language
 }

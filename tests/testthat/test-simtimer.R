@@ -36,15 +36,15 @@ test_that("sim_time delivers the right number of seconds of the day", {
   expect_equal(sim_time(0), 0)
   expect_equal(sim_time(24*60*60), 0)
   expect_equal(sim_time(365*24*60*60), 0)
-  expect_equal(sim_time(365*24*60*60-1), 24*60*60-1)
+  expect_equal(sim_time(365*24*60*60 - 1), 24*60*60 - 1)
 })
 
 test_that("sim_wday works", {
   # skip("Skip for development of tests")
 
-  expect_equal(sim_wday(6*24*60*60, origin_date), "Thurs")
-  expect_equal(sim_wday(0, origin_date), "Fri")
-  expect_equal(sim_wday(24*60*60, origin_date), "Sat")
-  expect_equal(sim_wday(365*24*60*60, origin_date), "Sat")
+  expect_equal(sim_wday(0, origin_date), weekdays(origin_date, abbreviate = TRUE))
+  expect_equal(sim_wday(24*60*60, origin_date), weekdays(origin_date + 24*60*60, abbreviate = TRUE))
+  expect_equal(sim_wday(6*24*60*60, origin_date), weekdays(origin_date + 6*24*60*60, abbreviate = TRUE))
+  expect_equal(sim_wday(365*24*60*60, origin_date), weekdays(origin_date + 365*24*60*60, abbreviate = TRUE))
 })
 
