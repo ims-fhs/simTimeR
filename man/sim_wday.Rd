@@ -2,21 +2,28 @@
 % Please edit documentation in R/simtimer.R
 \name{sim_wday}
 \alias{sim_wday}
-\title{Weekday of a sim_datetime}
+\title{Weekday part of a sim_datetime}
 \usage{
-sim_wday(sim_datetime)
+sim_wday(sim_datetime, origin_date)
 }
 \arguments{
-\item{sim_datetime}{A sim_datetime}
+\item{sim_datetime}{A sim_datetime (integer representing the passed seconds since origin_date)}
+
+\item{origin_date}{A datetime (POSIXt)}
 }
 \value{
-the weekday in the format: "Mo, Di, Mi, Do, Fr, Sa, So"
+the abbreviated weekday
 }
 \description{
-Weekday of a sim_datetime
+sim_wday() returns the weekday of a sim_datetime. It's crucial to use the same origin_date for
+sim_wday() than the origin_date that was used to generate the sim_datetime
 }
 \examples{
 origin_date <- lubridate::ymd_hms("2016-01-01 00:00:00")
-sim_wday(sim_datetime(lubridate::ymd_hms("2016-01-01 00:01:00")))
-# [1] "Fri"
+sim_wday(60, origin_date)
+# [1] "Fri" # Depends on your Systems Language
+sim_wday(sim_datetime(lubridate::ymd_hms("2016-01-01 00:01:00"), origin_date), origin_date)
+# [1] "Fri" # Depends on your Systems Language
+sim_wday(sim_datetime(lubridate::ymd_hms("2016-01-02 00:01:00"), origin_date), origin_date)
+# [1] "Sat" # Depends on your Systems Language
 }

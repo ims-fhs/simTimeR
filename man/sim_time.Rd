@@ -2,23 +2,31 @@
 % Please edit documentation in R/simtimer.R
 \name{sim_time}
 \alias{sim_time}
-\title{Day-time part of a sim_datetime}
+\title{Time part of a sim_datetime}
 \usage{
 sim_time(sim_datetime)
 }
 \arguments{
-\item{sim_datetime}{A sim_datetime}
+\item{sim_datetime}{A sim_datetime (integer representing the passed seconds since origin_date)}
 }
 \value{
-the actual day-time in seconds (0-(24*60*60-1))
+time in seconds (Range: 0-(24*60*60-1))
 }
 \description{
-Day-time part of a sim_datetime
+sim_time() returns the time of a sim_datetime in seconds.
+The beginning of a day is defined by the time component of origin_date which defines the
+parameter sim_datetime.
 }
 \examples{
+sim_time(200)
+# [1] 200
+sim_time(24*60*60-1)
+# [1] 86399
+sim_time(24*60*60)
+# [1] 0
 origin_date <- lubridate::ymd_hms("2016-01-01 00:00:00")
-sim_time(sim_datetime(lubridate::ymd_hms("2016-01-01 00:01:00")))
+sim_time(sim_datetime(lubridate::ymd_hms("2016-01-01 00:01:00"), origin_date))
 # [1] 60
-sim_time(sim_datetime(lubridate::ymd_hms("2016-01-02 00:01:00")))
+sim_time(sim_datetime(lubridate::ymd_hms("2016-01-02 00:01:00"), origin_date))
 # [1] 60
 }
