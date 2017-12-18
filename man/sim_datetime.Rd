@@ -16,6 +16,7 @@ A sim_datetime (integer representing the passed seconds since origin_date)
 }
 \description{
 sim_datetime() transforms a regular datetime element (POSIXt) to a sim_datetime element (integer)
+timezone (tz) will be ignored at the moment. Therefore tz of datetime and origin_date should be identical.
 }
 \examples{
 origin_date <- lubridate::ymd_hms("2016-01-01 00:00:00")

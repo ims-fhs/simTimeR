@@ -12,7 +12,7 @@ datetime(sim_datetime, origin_date)
 \item{origin_date}{A datetime (POSIXt)}
 }
 \value{
-datetime A POSIXct
+datetime A POSIXt
 }
 \description{
 datetime() transforms a sim_datetime element (integer) to a regular datetime element (POSIXt)
