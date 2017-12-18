@@ -26,7 +26,7 @@ simtimer uses an `origin_date` and calculates all dates and times referring to t
 The applications of simtimer are discrete event simulations representing a timerange of several minutes to years. For such problems, the time dimension might preferably be represented as a relative timescale (integer) than a series of `date_time` objects (POSIXt). simtimer is a basic tool to transform `date_times` to a relative timescale in seconds (`sim_datetime`) and vice versa. Additionally simtimer allows to extract elements of a `sim_datetime` such as time, weekday and date.  
 
 ```{r, echo = F, out.width = "690px"}
-knitr::include_graphics("comparison_simtimer_vs_regular_time.png")
+knitr::include_graphics("comparison_simtimer_vs_regular_time.jpg")
 ```
 
 

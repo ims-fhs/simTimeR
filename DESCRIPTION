@@ -1,13 +1,13 @@
 Package: simtimer
 Type: Package
-Title: datetimes as integers for simulations
-Version: 3.0.6
+Title: Datetimes as Integers for Simulations
+Version: 3.0.7
 Date: 2017-12-18
 Author: Adrian Staempfli, Christoph Strauss, Michael Schmid
 Maintainer: Adrian Staempfli <adrian.staempfli@fhsg.ch>
-Description: simtimer handles datetimes as integers (called
+Description: This package handles datetimes as integers (called
         sim_datetimes) for the usage inside simulations.
-License: GPL-3 + file LICENSE
+License: GPL-3
 LazyData: TRUE
 Suggests: testthat, knitr, rmarkdown, microbenchmark, lubridate
 URL: http://github.com/ims-fhs/simtimer
