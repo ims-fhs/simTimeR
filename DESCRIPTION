@@ -1,12 +1,18 @@
 Package: simtimer
 Type: Package
 Title: Datetimes as Integers for Simulations
-Version: 3.0.0
-Date: 2017-12-18
+Version: 3.0.1
+Date: 2017-12-19
 Author: Adrian Staempfli, Christoph Strauss, Michael Schmid
 Maintainer: Adrian Staempfli <adrian.staempfli@fhsg.ch>
 Description: Handles datetimes as integers (called sim_datetimes) for
-        the usage inside simulations.
+        the usage inside simulations. The conversion is made using the
+        internally S4 generic function "as.numeric()" of the package
+        base. Department of Statistics, University of California,
+        Berkeley (2006)
+        <https://www.stat.berkeley.edu/~s133/dates.html> Department of
+        Mathematics ETH ZC<rich, Switzerland (2017)
+        <https://stat.ethz.ch/R-manual/R-devel/library/base/html/difftime.html>
 License: GPL-3
 LazyData: TRUE
 Suggests: testthat, knitr, rmarkdown, microbenchmark, lubridate

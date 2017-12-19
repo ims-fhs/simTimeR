@@ -17,7 +17,7 @@ knitr::opts_chunk$set(message = FALSE)
 
 <!-- Code for adding footnotes: footnotes^[This is a footnote.] -->
 
-simtimer in a little R package designed to simplify (and speeding up) calculating time intervals in discrete event simulations. 
+simtimer is a little R package designed to simplify (and speeding up) calculating time intervals in discrete event simulations. 
 
 Discrete event simulations is a simulation paradigm that is based on the evaluation of events taking place in a time-specific order. Therefore a discrete event simulation calculates many time intervals. simtimer handles dates and times as integers. This makes working with time intervals as easy (and as fast) as subtracting integers.
 
