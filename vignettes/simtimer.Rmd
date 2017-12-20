@@ -32,7 +32,7 @@ knitr::include_graphics("comparison_simtimer_vs_regular_time.jpg")
 
 ## Basic transformation
 
-For the transformation into the relative timescale (`date_time` -> `sim_datetime`) use the corresponding function `sim_datetime()`. This function expects an `origin_date` of choice to be predefined. This `origin_date` should be earlier in time than the following `date_time`-elements.
+For the transformation into the relative timescale (`date_time` -> `sim_datetime`) use the corresponding function `as.sim_datetime()`. This function expects an `origin_date` of choice to be predefined. This `origin_date` should be earlier in time than the following `date_time`-elements.
 
 ```{r}
 library(simtimer)
@@ -41,16 +41,16 @@ my_datetime <- c(lubridate::ymd_hms("2017-01-01 02:00:00", tz = "UTC"),
                  lubridate::ymd_hms("2017-02-27 20:53:20", tz = "UTC"),
                  lubridate::ymd_hms("2017-08-20 11:33:20", tz = "UTC"),
                  lubridate::ymd_hms("2018-01-06 08:53:20", tz = "UTC"))
-my_sim_datetime <- sim_datetime(my_datetime, origin_date)
+my_sim_datetime <- as.sim_datetime(my_datetime, origin_date)
 my_sim_datetime
 class(my_sim_datetime)
 ```
 
 All remaining functions of simtimer take a `sim_datetime` as argument.  
 
-For the opposite transformation (`sim_datetime` -> `date_time`) use the corresponding function `datetime()` with the same `origin_date`.
+For the opposite transformation (`sim_datetime` -> `date_time`) use the corresponding function `as.datetime()` with the same `origin_date`.
 ```{r}
-datetime(my_sim_datetime, origin_date)
+as.datetime(my_sim_datetime, origin_date)
 ```
 
 

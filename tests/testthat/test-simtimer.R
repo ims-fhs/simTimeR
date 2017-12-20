@@ -9,17 +9,17 @@
 context("basic functions")
 test_that("sim_datetime works", {
   # skip("Skip for development of tests")
-  expect_equal(sim_datetime(t_20160101, origin_date), 0)
-  expect_equal(sim_datetime(t_20160102, origin_date), 86400)
-  expect_equal(sim_datetime(t_20170101, origin_date), 366*24*60*60)
+  expect_equal(as.sim_datetime(t_20160101, origin_date), 0)
+  expect_equal(as.sim_datetime(t_20160102, origin_date), 86400)
+  expect_equal(as.sim_datetime(t_20170101, origin_date), 366*24*60*60)
 })
 
 test_that("datetime works", {
   # skip("Skip for development of tests")
 
-  expect_equal(datetime(sim_datetime(t_20160101, origin_date), origin_date), t_20160101)
-  expect_equal(datetime(sim_datetime(t_20160102, origin_date), origin_date), t_20160102)
-  expect_equal(datetime(sim_datetime(t_20170101, origin_date), origin_date), t_20170101)
+  expect_equal(as.datetime(as.sim_datetime(t_20160101, origin_date), origin_date), t_20160101)
+  expect_equal(as.datetime(as.sim_datetime(t_20160102, origin_date), origin_date), t_20160102)
+  expect_equal(as.datetime(as.sim_datetime(t_20170101, origin_date), origin_date), t_20170101)
 })
 
 test_that("sim_date works", {

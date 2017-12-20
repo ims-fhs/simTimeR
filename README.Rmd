@@ -1,4 +1,3 @@
----
 output: github_document
 ---
 
@@ -38,11 +37,11 @@ Simtimer allows transformation between datetimes (POSIXt) and sim_datetimes (int
 ```{r example}
 origin_date <- lubridate::ymd_hms("2016-01-01 00:00:00")
 my_datetime <-  lubridate::ymd_hms("2016-01-02 01:01:01")
-my_simdatetime <- sim_datetime(my_datetime, origin_date)
+my_simdatetime <- as.sim_datetime(my_datetime, origin_date)
 my_simdatetime
 ```
 ```{r}
-datetime(my_simdatetime, origin_date)
+as.datetime(my_simdatetime, origin_date)
 ```
 
 Simtimer allows to manipulate sim_datetimes and extract parts of sim_datetimes with
