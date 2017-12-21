@@ -3,9 +3,9 @@ This is a resubmission.
 
 In this version I have:  
 
-* Included a reference to Discrete-Event Simulation, the application of simtimer.
-* More clearly stated how simtimer calculates the relative timescale using as.numeric().
-* Renamed functions for a better understanding between objects of the relative timescale (called sim_datetimes) and functions to transform from datetime to sim_datetime and back (now called as.sim_datetime() and as.datetime()).
+* added a blank between "(1999)<doi:10.2307/2288169>":
+(1999) <doi:10.2307/2288169>
+
 
 ## Test environments
 * local Windows 10 install, R 3.4.3
