@@ -2,7 +2,7 @@
 % Please edit documentation in R/simtimer.R
 \name{sim_date}
 \alias{sim_date}
-\title{Day part of a sim_datetime}
+\title{Date part of a sim_datetime}
 \usage{
 sim_date(sim_datetime)
 }
@@ -13,10 +13,10 @@ sim_date(sim_datetime)
 the number of days (24h-intervals) that have passed since origin_date
 }
 \description{
-sim_date() returns the day of a sim_datetime.
-Therefore sim_date() calculates the number of days (24h-intervals) that have passed since origin_date.
-If the origin_date of sim_datetime has a time component different than 00:00:00, the 24h-intervals
-are correlated to this particular time component.
+sim_date() returns the date part of a sim_datetime.
+Therefore sim_date() calculates the number of days (24h-intervals) that have
+passed since origin_date. If the origin_date of sim_datetime has a time component
+different than 00:00:00, the 24h-intervals are correlated to this particular time component.
 }
 \examples{
 sim_date(24*60*60-1)
@@ -26,6 +26,6 @@ sim_date(24*60*60)
 sim_date(452*24*60*60)
 # [1] 452
 origin_date <- lubridate::ymd_hms("2016-01-01 00:00:00")
-sim_date(sim_datetime(lubridate::ymd_hms("2016-01-02 00:01:00"), origin_date))
+sim_date(as.sim_datetime(lubridate::ymd_hms("2016-01-02 00:01:00"), origin_date))
 # [1] 1
 }
