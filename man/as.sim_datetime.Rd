@@ -21,9 +21,9 @@ The timezone (tz) will be ignored at the moment.
 Therefore tz of datetime and origin_date should be identical.
 }
 \examples{
-origin_date <- lubridate::ymd_hms("2016-01-01 00:00:00")
-as.sim_datetime(lubridate::ymd_hms("2016-01-01 00:01:00"), origin_date)
+origin_date <- as.POSIXct("2016-01-01 00:00:00", tz = "UTC")
+as.sim_datetime(as.POSIXct("2016-01-01 00:01:00", tz = "UTC"), origin_date)
 # [1] 60
-as.sim_datetime(lubridate::ymd_hms("2016-01-02 00:01:00"), origin_date)
+as.sim_datetime(as.POSIXct("2016-01-02 00:01:00", tz = "UTC"), origin_date)
 # [1] 86460
 }

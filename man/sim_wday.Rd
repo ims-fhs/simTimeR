@@ -12,7 +12,7 @@ sim_wday(sim_datetime, origin_date)
 \item{origin_date}{A datetime (POSIXt)}
 }
 \value{
-A character with the weekday number ("1" = Monday, "2" = Tuesday, ..., "7" = Sunday)
+A character, giving the weekday number ("1" = Monday, "2" = Tuesday, ..., "7" = Sunday)
 }
 \description{
 sim_wday() returns the weekday of a sim_datetime. It's crucial to use the same origin_date for
@@ -20,7 +20,7 @@ sim_wday() than the origin_date that was used to generate the sim_datetime.
 sim_wday() uses the base R format(x, "\%u") function.
 }
 \examples{
-origin_date <- lubridate::ymd_hms("2016-01-01 00:00:00")
+origin_date <- as.POSIXct("2016-01-01 00:00:00", tz = "UTC")
 sim_wday(60, origin_date)
 sim_wday(3600,origin_date)
 sim_wday(36*3600,origin_date)

@@ -25,8 +25,8 @@
 #' # [1] 1
 #' sim_date(452*24*60*60)
 #' # [1] 452
-#' origin_date <- lubridate::ymd_hms("2016-01-01 00:00:00")
-#' sim_date(as.sim_datetime(lubridate::ymd_hms("2016-01-02 00:01:00"), origin_date))
+#' origin_date <- as.POSIXct("2016-01-01 00:00:00", tz = "UTC")
+#' sim_date(as.sim_datetime(as.POSIXct("2016-01-02 00:01:00", tz = "UTC"), origin_date))
 #' # [1] 1
 sim_date <- function(sim_datetime) {
   return(trunc(sim_datetime/(24*60*60)))
@@ -49,10 +49,10 @@ sim_date <- function(sim_datetime) {
 #' # [1] 86399
 #' sim_time(24*60*60)
 #' # [1] 0
-#' origin_date <- lubridate::ymd_hms("2016-01-01 00:00:00")
-#' sim_time(as.sim_datetime(lubridate::ymd_hms("2016-01-01 00:01:00"), origin_date))
+#' origin_date <- as.POSIXct("2016-01-01 00:00:00", tz = "UTC")
+#' sim_time(as.sim_datetime(as.POSIXct("2016-01-01 00:01:00", tz = "UTC"), origin_date))
 #' # [1] 60
-#' sim_time(as.sim_datetime(lubridate::ymd_hms("2016-01-02 00:01:00"), origin_date))
+#' sim_time(as.sim_datetime(as.POSIXct("2016-01-02 00:01:00", tz = "UTC"), origin_date))
 #' # [1] 60
 sim_time <- function(sim_datetime) {
   return(sim_datetime %% (24*60*60))
@@ -71,7 +71,7 @@ sim_time <- function(sim_datetime) {
 #' @return A character, giving the weekday number ("1" = Monday, "2" = Tuesday, ..., "7" = Sunday)
 #' @export
 #' @examples
-#' origin_date <- lubridate::ymd_hms("2016-01-01 00:00:00")
+#' origin_date <- as.POSIXct("2016-01-01 00:00:00", tz = "UTC")
 #' sim_wday(60, origin_date)
 #' sim_wday(3600,origin_date)
 #' sim_wday(36*3600,origin_date)
@@ -93,10 +93,10 @@ sim_wday <- function(sim_datetime, origin_date) {
 #' @export
 #'
 #' @examples
-#' origin_date <- lubridate::ymd_hms("2016-01-01 00:00:00")
-#' as.sim_datetime(lubridate::ymd_hms("2016-01-01 00:01:00"), origin_date)
+#' origin_date <- as.POSIXct("2016-01-01 00:00:00", tz = "UTC")
+#' as.sim_datetime(as.POSIXct("2016-01-01 00:01:00", tz = "UTC"), origin_date)
 #' # [1] 60
-#' as.sim_datetime(lubridate::ymd_hms("2016-01-02 00:01:00"), origin_date)
+#' as.sim_datetime(as.POSIXct("2016-01-02 00:01:00", tz = "UTC"), origin_date)
 #' # [1] 86460
 as.sim_datetime <- function(datetime, origin_date) {
   return(as.integer(as.numeric(datetime - origin_date, units = "secs")))
@@ -113,12 +113,13 @@ as.sim_datetime <- function(datetime, origin_date) {
 #' @return datetime A POSIXt
 #' @export
 #' @examples
-#' origin_date <- lubridate::ymd_hms("2016-01-01 00:00:00")
+#' origin_date <- as.POSIXct("2016-01-01 00:00:00", tz = "UTC")
 #' as.datetime(60, origin_date)
 #' # [1] "2016-01-01 00:01:00 UTC"
 #' as.datetime(600, origin_date)
 #' # [1] "2016-01-01 00:10:00 UTC"
-#' as.datetime(as.sim_datetime(lubridate::ymd_hms("2016-01-02 00:00:00"), origin_date), origin_date)
+#' as.datetime(as.sim_datetime(as.POSIXct("2016-01-02 00:00:00", tz = "UTC"), origin_date),
+#' origin_date)
 #' # [1] "2016-01-02 UTC"
 as.datetime <- function(sim_datetime, origin_date) {
   return(origin_date + sim_datetime)
