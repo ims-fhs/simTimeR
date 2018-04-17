@@ -63,24 +63,20 @@ sim_time <- function(sim_datetime) {
 #'
 #' sim_wday() returns the weekday of a sim_datetime. It's crucial to use the same origin_date for
 #' sim_wday() than the origin_date that was used to generate the sim_datetime.
-#' sim_wday() uses the base R weekdays() function. Therefore the naming of weekdays
-#' is system language specific. (see: Sys.getlocale())
+#' sim_wday() uses the base R format(x, "\%u") function.
 #'
 #' @param sim_datetime A sim_datetime (integer representing the passed seconds since origin_date)
 #' @param origin_date A datetime (POSIXt)
 #'
-#' @return the abbreviated weekday (depending on your Sys.getlocale())
+#' @return A character, giving the weekday number ("1" = Monday, "2" = Tuesday, ..., "7" = Sunday)
 #' @export
 #' @examples
 #' origin_date <- lubridate::ymd_hms("2016-01-01 00:00:00")
 #' sim_wday(60, origin_date)
-#' # [1] "Fri" # depending on your Sys.getlocale()
-#' sim_wday(as.sim_datetime(lubridate::ymd_hms("2016-01-01 00:01:00"), origin_date), origin_date)
-#' # [1] "Fri" # depending on your Sys.getlocale()
-#' sim_wday(as.sim_datetime(lubridate::ymd_hms("2016-01-02 00:01:00"), origin_date), origin_date)
-#' # [1] "Sat" # depending on your Sys.getlocale()
+#' sim_wday(3600,origin_date)
+#' sim_wday(36*3600,origin_date)
 sim_wday <- function(sim_datetime, origin_date) {
-  return(as.character(weekdays(origin_date + sim_datetime, abbreviate = TRUE)))
+  return(as.character(format(origin_date + sim_datetime, "%u")))
 }
 
 #' Transformation from a datetime to a sim_datetime
