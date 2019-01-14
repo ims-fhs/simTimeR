@@ -19,11 +19,12 @@ as.datetime() transforms a sim_datetime element (integer) to a regular datetime
 element (POSIXt)
 }
 \examples{
-origin_date <- lubridate::ymd_hms("2016-01-01 00:00:00")
+origin_date <- as.POSIXct("2016-01-01 00:00:00", tz = "UTC")
 as.datetime(60, origin_date)
 # [1] "2016-01-01 00:01:00 UTC"
 as.datetime(600, origin_date)
 # [1] "2016-01-01 00:10:00 UTC"
-as.datetime(as.sim_datetime(lubridate::ymd_hms("2016-01-02 00:00:00"), origin_date), origin_date)
+as.datetime(as.sim_datetime(as.POSIXct("2016-01-02 00:00:00", tz = "UTC"), origin_date),
+origin_date)
 # [1] "2016-01-02 UTC"
 }

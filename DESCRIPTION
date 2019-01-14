@@ -1,8 +1,8 @@
 Package: simtimer
 Type: Package
 Title: Datetimes as Integers for Discrete-Event Simulations
-Version: 3.0.0
-Date: 2017-12-21
+Version: 3.0.2
+Date: 2018-04-17
 Author: Adrian Staempfli, Christoph Strauss, Michael Schmid
 Maintainer: Adrian Staempfli <adrian.staempfli@fhsg.ch>
 Description: Handles datetimes as integers for the usage inside
@@ -12,7 +12,7 @@ Description: Handles datetimes as integers for the usage inside
         by Averill Law and David Kelton (1999) <doi:10.2307/2288169>.
 License: GPL-3
 LazyData: TRUE
-Suggests: testthat, knitr, rmarkdown, microbenchmark, lubridate
+Suggests: testthat, knitr, rmarkdown, microbenchmark
 URL: http://github.com/ims-fhs/simtimer
 RoxygenNote: 6.0.1
 VignetteBuilder: knitr

@@ -36,11 +36,11 @@ For the transformation into the relative timescale (`date_time` -> `sim_datetime
 
 ```{r}
 library(simtimer)
-origin_date <- lubridate::ymd_hms("2017-01-01 00:00:00", tz = "UTC")
-my_datetime <- c(lubridate::ymd_hms("2017-01-01 02:00:00", tz = "UTC"), 
-                 lubridate::ymd_hms("2017-02-27 20:53:20", tz = "UTC"),
-                 lubridate::ymd_hms("2017-08-20 11:33:20", tz = "UTC"),
-                 lubridate::ymd_hms("2018-01-06 08:53:20", tz = "UTC"))
+origin_date <- as.POSIXct("2017-01-01 00:00:00", tz = "UTC")
+my_datetime <- c(as.POSIXct("2017-01-01 02:00:00", tz = "UTC"), 
+                 as.POSIXct("2017-02-27 20:53:20", tz = "UTC"),
+                 as.POSIXct("2017-08-20 11:33:20", tz = "UTC"),
+                 as.POSIXct("2018-01-06 08:53:20", tz = "UTC"))
 my_sim_datetime <- as.sim_datetime(my_datetime, origin_date)
 my_sim_datetime
 class(my_sim_datetime)
