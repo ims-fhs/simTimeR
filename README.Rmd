@@ -32,7 +32,7 @@ devtools::install_github("ims-fhs/simtimer")
 ## Example
 
 Simtimer allows transformation between datetimes (POSIXt) and sim_datetimes (integer) with 
-`sim_datetime()` and `datetime()`. 
+`as.sim_datetime()` and `as.datetime()`. 
 
 ```{r example}
 origin_date <- as.POSIXct("2016-01-01 00:00:00", tz = "UTC")
