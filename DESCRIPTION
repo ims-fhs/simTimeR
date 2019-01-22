@@ -1,8 +1,8 @@
 Package: simtimer
 Type: Package
 Title: Datetimes as Integers for Discrete-Event Simulations
-Version: 4.0.0
-Date: 2019-01-14
+Version: 4.0.1
+Date: 2019-01-22
 Author: Adrian Staempfli, Christoph Strauss, Michael Schmid
 Maintainer: Adrian Staempfli <adrian.staempfli@fhsg.ch>
 Description: Handles datetimes as integers for the usage inside
